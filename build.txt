@@ -1,0 +1,5 @@
+author = Solarius
+version = 0.1
+displayName = Crescent
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
+weakReferences = ThoriumMod@0.10

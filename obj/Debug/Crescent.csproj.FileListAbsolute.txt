@@ -1,0 +1,11 @@
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\FirstMod.dll
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\FirstMod.pdb
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\Microsoft.Xna.Framework.dll
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\Microsoft.Xna.Framework.Game.dll
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\Microsoft.Xna.Framework.Graphics.dll
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\Microsoft.Xna.Framework.Xact.dll
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\ReLogic.dll
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\bin\Debug\Terraria.exe
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\obj\Debug\Crescent.csprojResolveAssemblyReference.cache
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\obj\Debug\FirstMod.dll
+C:\Users\Mattomanx\Documents\My Games\Terraria\ModLoader\Mod Sources\Crescent\obj\Debug\FirstMod.pdb

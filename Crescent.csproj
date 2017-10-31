@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{01197185-7C0E-405E-8FC6-8577D43C1023}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FirstMod</RootNamespace>
+    <AssemblyName>FirstMod</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Crescent.cs" />
+    <Compile Include="CrescentPlayer.cs" />
+    <Compile Include="Dusts\RadiantParticle.cs" />
+    <Compile Include="Items\Weapons\RadiantScythe.cs" />
+    <Compile Include="Items\Weapons\StrengthSword.cs" />
+    <Compile Include="Projectiles\RadiantScytheProjectile.cs" />
+    <Compile Include="UI\CrescentUI.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework.Game\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework.Graphics\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework.Xact\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Xact.dll</HintPath>
+    </Reference>
+    <Reference Include="ReLogic">
+      <HintPath>.\ReLogic.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="Terraria">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\terraria\Terraria.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\UI\ExpBar.png" />
+    <Content Include="Assets\UI\ExpBarFilledEnd.png" />
+    <Content Include="Assets\UI\ExpBarFilledMid.png" />
+    <Content Include="Assets\UI\ExpBarFilledStart.png" />
+    <Content Include="Assets\UI\LifeBarEnd.png" />
+    <Content Include="Assets\UI\LifeBarFilled1.png" />
+    <Content Include="Assets\UI\LifeBarFilled2.png" />
+    <Content Include="Assets\UI\LifeBarMid.png" />
+    <Content Include="Assets\UI\LifeFloral.png" />
+    <Content Include="Assets\UI\LifeFloralHider.png" />
+    <Content Include="Assets\UI\LifeforceBox.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\AgilityButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\DexterityButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\FortitudeButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\IntelligenceButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\RadianceButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\RespecButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\RestartButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\StrengthButton.png" />
+    <Content Include="Assets\UI\LifeForceBoxSubAssets\VitalityButton.png" />
+    <Content Include="Assets\UI\ManaBarEnd.png" />
+    <Content Include="Assets\UI\ManaBarFilled1.png" />
+    <Content Include="Assets\UI\ManaBarFilled2.png" />
+    <Content Include="Assets\UI\ManaBarMid.png" />
+    <Content Include="Assets\UI\ManaBarSpecialCase.png" />
+    <Content Include="Assets\UI\TopRight.png" />
+    <Content Include="Dusts\RadiantParticle.png" />
+    <Content Include="Items\Weapons\RadiantScythe.png" />
+    <Content Include="Items\Weapons\StrengthSword.png" />
+    <Content Include="Projectiles\RadiantScytheProjectile.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"C:\Program Files (x86)\Steam\steamapps\common\terraria\Terraria.exe" -build "$(ProjectDir)\" -eac "$(TargetPath)"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

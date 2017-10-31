@@ -41,7 +41,7 @@ namespace Crescent.Items.Weapons
 				recipe.AddTile(ThoriumMod, "ThoriumAnvil");
 			}
 			recipe.SetResult(this);
-			recipe.AddRecipe();
+			//recipe.AddRecipe();
 		}
 
 		public override void MeleeEffects(Player player, Rectangle hitbox)

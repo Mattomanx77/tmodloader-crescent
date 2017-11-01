@@ -1,3 +1,3 @@
-This is a crappy UI/RPG mod.
+This is a UI/RPG mod.
 I made it in my spare time.
 Who needs balance anyway?

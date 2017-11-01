@@ -31,11 +31,12 @@ namespace Crescent.UI
 		public Texture2D buttonVitalityImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/VitalityButton");
 		public Texture2D buttonRadianceImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RadianceButton");
 		public UIImageButton PerkIncButton;
+		public string[] PerkRelevantString = new string[32];
+		public string[] PerkRelevantDescString = new string[32];
 		public Texture2D PerkIncButtonImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/PlusButton");
-		public string PerkSelected;
-		public UIImageButton PerkWingMuscleButton;
-		public Texture2D perkButtonWingMuscleImage = ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_WingMuscle");
-		public UIText PerkWingMuscleText = new UIText("");
+		public int PerkSelected;
+		public UIImageButton[] PerkButton = new UIImageButton[32];
+		public UIText[] PerkText = new UIText[32];
 		private LifeBar Life = new LifeBar();
 		private ManaBar Mana = new ManaBar();
 		private UIImage Exp = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ExpBar"));
@@ -195,8 +196,8 @@ namespace Crescent.UI
 			UIImageButton StrengthButton = new UIImageButton(buttonStrengthImage);
 			StrengthButton.Width.Set(48f, 0f);StrengthButton.Height.Set(48f, 0f);
 			StrengthButton.Left.Set(1f, 0f);StrengthButton.Top.Set(32f, 0f);
-			StrengthButton.OnClick += new MouseEvent(StrengthButtonClicked);
-			StrengthButton.OnRightClick += new MouseEvent(StrengthButtonClicked2);
+			StrengthButton.OnClick += (a, b) => StatButtonClicked(0, true);
+			StrengthButton.OnRightClick += (a, b) => StatButtonClicked(0, false);
 			LevelUI.Append(StrengthButton);
 			StrText.Left.Set(52f, 0f);
 			StrText.Top.Set(16f, 0f);
@@ -205,8 +206,8 @@ namespace Crescent.UI
 			UIImageButton AgilityButton = new UIImageButton(buttonAgilityImage);
 			AgilityButton.Width.Set(48f, 0f);AgilityButton.Height.Set(48f, 0f);
 			AgilityButton.Left.Set(1f, 0f);AgilityButton.Top.Set(80f, 0f);
-			AgilityButton.OnClick += new MouseEvent(AgilityButtonClicked);
-			AgilityButton.OnRightClick += new MouseEvent(AgilityButtonClicked2);
+			AgilityButton.OnClick += (a, b) => StatButtonClicked(1, true);
+			AgilityButton.OnRightClick += (a, b) => StatButtonClicked(1, false);
 			LevelUI.Append(AgilityButton);
 			AgiText.Left.Set(52f, 0f);
 			AgiText.Top.Set(16f, 0f);
@@ -215,8 +216,8 @@ namespace Crescent.UI
 			UIImageButton DexterityButton = new UIImageButton(buttonDexterityImage);
 			DexterityButton.Width.Set(48f, 0f);DexterityButton.Height.Set(48f, 0f);
 			DexterityButton.Left.Set(1f, 0f);DexterityButton.Top.Set(128f, 0f);
-			DexterityButton.OnClick += new MouseEvent(DexterityButtonClicked);
-			DexterityButton.OnRightClick += new MouseEvent(DexterityButtonClicked2);
+			DexterityButton.OnClick += (a, b) => StatButtonClicked(2, true);
+			DexterityButton.OnRightClick += (a, b) => StatButtonClicked(2, false);
 			LevelUI.Append(DexterityButton);
 			DexText.Left.Set(52f, 0f);
 			DexText.Top.Set(16f, 0f);
@@ -225,8 +226,8 @@ namespace Crescent.UI
 			UIImageButton FortitudeButton = new UIImageButton(buttonFortitudeImage);
 			FortitudeButton.Width.Set(48f, 0f);FortitudeButton.Height.Set(48f, 0f);
 			FortitudeButton.Left.Set(1f, 0f);FortitudeButton.Top.Set(176f, 0f);
-			FortitudeButton.OnClick += new MouseEvent(FortitudeButtonClicked);
-			FortitudeButton.OnRightClick += new MouseEvent(FortitudeButtonClicked2);
+			FortitudeButton.OnClick += (a, b) => StatButtonClicked(3, true);
+			FortitudeButton.OnRightClick += (a, b) => StatButtonClicked(3, false);
 			LevelUI.Append(FortitudeButton);
 			ForText.Left.Set(52f, 0f);
 			ForText.Top.Set(16f, 0f);
@@ -235,8 +236,8 @@ namespace Crescent.UI
 			UIImageButton IntelligenceButton = new UIImageButton(buttonIntelligenceImage);
 			IntelligenceButton.Width.Set(48f, 0f);IntelligenceButton.Height.Set(48f, 0f);
 			IntelligenceButton.Left.Set(1f, 0f);IntelligenceButton.Top.Set(224f, 0f);
-			IntelligenceButton.OnClick += new MouseEvent(IntelligenceButtonClicked);
-			IntelligenceButton.OnRightClick += new MouseEvent(IntelligenceButtonClicked2);
+			IntelligenceButton.OnClick += (a, b) => StatButtonClicked(4, true);
+			IntelligenceButton.OnRightClick += (a, b) => StatButtonClicked(4, false);
 			LevelUI.Append(IntelligenceButton);
 			IntText.Left.Set(52f, 0f);
 			IntText.Top.Set(16f, 0f);
@@ -245,8 +246,8 @@ namespace Crescent.UI
 			UIImageButton VitalityButton = new UIImageButton(buttonVitalityImage);
 			VitalityButton.Width.Set(48f, 0f);VitalityButton.Height.Set(48f, 0f);
 			VitalityButton.Left.Set(1f, 0f);VitalityButton.Top.Set(272f, 0f);
-			VitalityButton.OnClick += new MouseEvent(VitalityButtonClicked);
-			VitalityButton.OnRightClick += new MouseEvent(VitalityButtonClicked2);
+			VitalityButton.OnClick += (a, b) => StatButtonClicked(5, true);
+			VitalityButton.OnRightClick += (a, b) => StatButtonClicked(5, false);
 			LevelUI.Append(VitalityButton);
 			VitText.Left.Set(52f, 0f);
 			VitText.Top.Set(16f, 0f);
@@ -255,8 +256,8 @@ namespace Crescent.UI
 			UIImageButton RadianceButton = new UIImageButton(buttonRadianceImage);
 			RadianceButton.Width.Set(48f, 0f);RadianceButton.Height.Set(48f, 0f);
 			RadianceButton.Left.Set(1f, 0f);RadianceButton.Top.Set(320f, 0f);
-			RadianceButton.OnClick += new MouseEvent(RadianceButtonClicked);
-			RadianceButton.OnRightClick += new MouseEvent(RadianceButtonClicked2);
+			RadianceButton.OnClick += (a, b) => StatButtonClicked(6, true);
+			RadianceButton.OnRightClick += (a, b) => StatButtonClicked(6, false);
 			LevelUI.Append(RadianceButton);
 			RadText.Left.Set(52f, 0f);
 			RadText.Top.Set(16f, 0f);
@@ -275,84 +276,122 @@ namespace Crescent.UI
 
 			PerkIncButton = new UIImageButton(PerkIncButtonImage);
 			PerkIncButton.Width.Set(15f, 0f); PerkIncButton.Height.Set(15f, 0f);
-			PerkIncButton.OnClick += new MouseEvent(PerkIncButtonClicked);
-			PerkIncButton.OnRightClick += new MouseEvent(PerkIncButtonClicked2);
+			PerkIncButton.OnClick += (a, b) => PerkIncButtonClicked(true);
+			PerkIncButton.OnRightClick += (a, b) => PerkIncButtonClicked(false);
 			LevelUI.Append(PerkIncButton);
+			
+			//Names
+			PerkRelevantString[1] = "Wing Muscle";
+			PerkRelevantString[2] = "Overlord";
+			//Buttons
+			PerkButton[1] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_WingMuscle"));
+			PerkButton[1].Width.Set(23f, 0f); PerkButton[1].Height.Set(23f, 0f);
+			PerkButton[1].Left.Set(89f + 244f - 12.5f, 0f); PerkButton[1].Top.Set(14f + 180f - 12f, 0f);
+			PerkButton[1].OnClick += (a, b) => PerkButtonClicked(1);
+			PerkButton[1].OnRightClick += (a, b) => PerkDescClose();
+			LevelUI.Append(PerkButton[1]);
 
-			PerkWingMuscleButton = new UIImageButton(perkButtonWingMuscleImage);
-			PerkWingMuscleButton.Width.Set(23f, 0f); PerkWingMuscleButton.Height.Set(23f, 0f);
-			PerkWingMuscleButton.Left.Set(109f + 244f - 12.5f, 0f); PerkWingMuscleButton.Top.Set(14f + 180f - 12f, 0f);
-			PerkWingMuscleButton.OnClick += new MouseEvent(PerkWingMuscleButtonClicked);
-			PerkWingMuscleButton.OnRightClick += new MouseEvent(PerkWingMuscleButtonClicked2);
-			LevelUI.Append(PerkWingMuscleButton);
+			PerkButton[2] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Overlord"));
+			PerkButton[2].Width.Set(23f, 0f); PerkButton[1].Height.Set(23f, 0f);
+			PerkButton[2].Left.Set(129f + 244f - 12.5f, 0f); PerkButton[2].Top.Set(14f + 180f - 12f, 0f);
+			PerkButton[2].OnClick += (a, b) => PerkButtonClicked(2);
+			PerkButton[2].OnRightClick += (a, b) => PerkDescClose();
+			LevelUI.Append(PerkButton[2]);
 
-			PerkWingMuscleText.Left.Set(0f, 0.75f);PerkWingMuscleText.Top.Set(0f, 0.5f);
-			PerkWingMuscleButton.Append(PerkWingMuscleText);
+			for (int i = 1; i <= 2; i++)
+			{
+				PerkText[i] = new UIText("");
+				PerkText[i].Left.Set(0f, 0.75f); PerkText[i].Top.Set(0f, 0.5f);
+				PerkButton[i].Append(PerkText[i]);
+			}
 
 			PerkDsc.Remove();
 			PerkIncButton.Remove();
 			#endregion
 		}
 
-		private void PerkIncButtonClicked(UIMouseEvent evt, UIElement listeningElement)
+		private void PerkIncButtonClicked(bool LeftClick)
 		{
-			switch (PerkSelected)
+			Player player = Main.player[Main.myPlayer];
+			if (LeftClick)
 			{
-				case "WingMuscle":
-					Player player = Main.player[Main.myPlayer];
-					if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= (int)Math.Pow(7, 1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle/2F))
-					{
-						player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= (int)Math.Pow(7, 1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle/2F);
-						player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle++;
-					}
-					PerkDsc.Remove();
-					PerkIncButton.Remove();
-					Main.PlaySound(SoundID.MenuTick);
-					break;
+				switch (PerkSelected)
+				{
+					case 1:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= (int)Math.Pow(2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]) / 2F, 3))
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= (int)Math.Pow(2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]) / 2F, 3);
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]++;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
+					case 2:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])))
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]));
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]++;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
+				}
 			}
+			else
+			{
+				switch (PerkSelected)
+				{
+					case 1:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] >= 1)
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += (int)Math.Pow(2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] - 1) / 2F, 3);
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]--;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
+					case 2:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2] >= 1)
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2] - 1));
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]--;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
+				}
+			}
+			//Descriptions
+			PerkRelevantDescString[1] = "Each point into this perk\ngives +20% flight\nCosts " + (int)Math.Pow(2 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] / 2F, 3) + " points to upgrade";
+			PerkRelevantDescString[2] = "Each point into this perk\ngives +1 maximum minions\nCosts " + (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])) + " points to upgrade";
+			PerkDscText.SetText(PerkRelevantDescString[PerkSelected]);
 		}
 
-		private void PerkIncButtonClicked2(UIMouseEvent evt, UIElement listeningElement){
-			switch (PerkSelected)
-			{
-				case "WingMuscle":
-					Player player = Main.player[Main.myPlayer];
-					if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle >= 1)
-					{
-						player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += (int)Math.Pow(7, 1 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle-1)/2F);
-						player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle--;
-					}
-					PerkDsc.Remove();
-					PerkIncButton.Remove();
-					Main.PlaySound(SoundID.MenuTick);
-					break;
-			}
-		}
-
-		private void PerkWingMuscleButtonClicked(UIMouseEvent evt, UIElement listeningElement){
+		private void PerkButtonClicked(int value)
+		{
+			Player player = Main.player[Main.myPlayer];
+			//Descriptions
+			PerkRelevantDescString[1] = "Each point into this perk\ngives +20% flight\nCosts " + (int)Math.Pow(2 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] / 2F, 3) + " points to upgrade";
+			PerkRelevantDescString[2] = "Each point into this perk\ngives +1 maximum minions\nCosts " + (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])) + " points to upgrade";
 			PerkDsc.Remove();
-			LevelUI.Append(PerkDsc);
-			PerkDsc.Left.Set(PerkWingMuscleButton.Left.Pixels - PerkDsc.Width.Pixels / 2 + 12f, 0f);
-			PerkDsc.Top.Set(PerkWingMuscleButton.Top.Pixels + 23f, 0f);
 			PerkIncButton.Remove();
+			LevelUI.Append(PerkDsc);
 			LevelUI.Append(PerkIncButton);
-			PerkIncButton.Left.Set(PerkWingMuscleButton.Left.Pixels + 23f, 0f);
-			PerkIncButton.Top.Set(PerkWingMuscleButton.Top.Pixels + 4f, 0f);
-			PerkDscTitleText.SetText("Wing Muscle");
+			PerkDsc.Left.Set(PerkButton[value].Left.Pixels - PerkDsc.Width.Pixels / 2 + 12f, 0f);
+			PerkDsc.Top.Set(PerkButton[value].Top.Pixels + 23f, 0f);
+			PerkIncButton.Left.Set(PerkButton[value].Left.Pixels + 23f, 0f);
+			PerkIncButton.Top.Set(PerkButton[value].Top.Pixels + 4f, 0f);
 			PerkDscTitleText.Left.Set(73.5f, 0f);
-			PerkDsc.Append(PerkDscTitleText);
-			PerkDscText.SetText("Each point into this perk\ngives +20% flight\nCosts " + (int)Math.Pow(7, 1 + Main.player[Main.myPlayer].GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle/2F) + " points to upgrade");
 			PerkDscText.Left.Set(25f, 0f); PerkDscText.Top.Set(25f, 0f);
+			PerkDscTitleText.SetText(PerkRelevantString[value]);
+			PerkDscText.SetText(PerkRelevantDescString[value]);
+			PerkDsc.Append(PerkDscTitleText);
 			PerkDsc.Append(PerkDscText);
-			PerkSelected = "WingMuscle";
+			PerkSelected = value;
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
-		private void PerkWingMuscleButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
+		private void PerkDescClose()
 		{
 			PerkDsc.Remove();
 			PerkIncButton.Remove();
-			PerkSelected = null;
+			PerkSelected = -1;
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
@@ -362,119 +401,16 @@ namespace Crescent.UI
 			Main.PlaySound(SoundID.MenuClose);
 		}
 
-		private void StrengthButtonClicked(UIMouseEvent evt, UIElement listeningElement){Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 1){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstr++;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt--;}Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void StrengthButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
+		private void StatButtonClicked(int num, bool LeftClick)
 		{
 			Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstr = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstr + 50;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - 50;
-			}Main.PlaySound(SoundID.MenuTick);
-		}
+			int i = 1;
+			if (!LeftClick)i = 50;
 
-		private void AgilityButtonClicked(UIMouseEvent evt, UIElement listeningElement){Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 1){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lagi++;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt--;}Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void AgilityButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50)
+			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= i)
 			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lagi = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lagi + 50;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - 50;
-			}
-			Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void DexterityButtonClicked(UIMouseEvent evt, UIElement listeningElement){Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 1){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Ldex++;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt--;}Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void DexterityButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50)
-			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Ldex = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Ldex + 50;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - 50;
-			}
-			Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void FortitudeButtonClicked(UIMouseEvent evt, UIElement listeningElement){Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 1){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lfor++;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt--;}Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void FortitudeButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50)
-			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lfor = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lfor + 50;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - 50;
-			}
-			Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void IntelligenceButtonClicked(UIMouseEvent evt, UIElement listeningElement){Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 1){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lint++;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt--;}Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void IntelligenceButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50)
-			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lint = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lint + 50;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - 50;
-			}
-			Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void VitalityButtonClicked(UIMouseEvent evt, UIElement listeningElement){Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 1){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lvit++;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt--;}Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void VitalityButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50)
-			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lvit = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lvit + 50;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - 50;
-			}
-			Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void RadianceButtonClicked(UIMouseEvent evt, UIElement listeningElement){Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 1){
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lrad++;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt--;}Main.PlaySound(SoundID.MenuTick);
-		}
-
-		private void RadianceButtonClicked2(UIMouseEvent evt, UIElement listeningElement)
-		{
-			Player player = Main.player[Main.myPlayer];
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50)
-			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lrad = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lrad + 50;
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - 50;
+				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[num] = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[num] + i;
+				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - i;
 			}
 			Main.PlaySound(SoundID.MenuTick);
 		}
@@ -482,9 +418,12 @@ namespace Crescent.UI
 		private void RespecButtonClicked(UIMouseEvent evt, UIElement listeningElement)
 		{
 			Player player = Main.player[Main.myPlayer];
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstr = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Ldex = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lagi = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lfor = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lint = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lvit = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lrad = 0;
+			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[1] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[2] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[4] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6] = 0;
 			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl * 7;
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] = 0;
+			}
 			Main.PlaySound(2, -1, -1, 4);
 		}
 
@@ -492,10 +431,13 @@ namespace Crescent.UI
 		{
 			Player player = Main.player[Main.myPlayer];
 			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl = 0;
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstr = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Ldex = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lagi = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lfor = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lint = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lvit = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lrad = 0;
+			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[1] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[2] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[4] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6] = 0;
 			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = 0;
 			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp = (int)(Math.Pow((player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl + 1) * 333, 1.2));
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle = 0;
+			for (int i = 0; i < 8; i++)
+			{
+				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] = 0;
+			}
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
@@ -529,16 +471,19 @@ namespace Crescent.UI
 			{
 
 			}
-			StrText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstr.ToString());
-			AgiText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lagi.ToString());
-			DexText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Ldex.ToString());
-			ForText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lfor.ToString());
-			IntText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lint.ToString());
-			VitText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lvit.ToString());
-			RadText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lrad.ToString());
+			StrText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0].ToString());
+			AgiText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[1].ToString());
+			DexText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[2].ToString());
+			ForText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3].ToString());
+			IntText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[4].ToString());
+			VitText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5].ToString());
+			RadText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6].ToString());
 			SttText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt.ToString());
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle > 0){PerkWingMuscleText.SetText("("+player.GetModPlayer<CrescentPlayer>(Crescent.mod).WingMuscle.ToString()+")");}
-			else{PerkWingMuscleText.SetText("");}
+			for (int i = 1; i <= 2; i++)
+			{
+				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] > 0) { PerkText[i].SetText("(" + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i].ToString() + ")"); }
+				else { PerkText[i].SetText(""); }
+			}
 
 			if (LifeBarWidth > 824) { LifeBarWidth = 824; }
 

@@ -7,8 +7,8 @@
     <ProjectGuid>{01197185-7C0E-405E-8FC6-8577D43C1023}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FirstMod</RootNamespace>
-    <AssemblyName>FirstMod</AssemblyName>
+    <RootNamespace>Crescent</RootNamespace>
+    <AssemblyName>Crescent</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

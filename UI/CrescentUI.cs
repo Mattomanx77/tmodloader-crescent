@@ -283,22 +283,38 @@ namespace Crescent.UI
 			//Names
 			PerkRelevantString[1] = "Wing Muscle";
 			PerkRelevantString[2] = "Overlord";
+			PerkRelevantString[3] = "Jumpman";
+			PerkRelevantString[4] = "Reaper of Stars";
 			//Buttons
 			PerkButton[1] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_WingMuscle"));
 			PerkButton[1].Width.Set(23f, 0f); PerkButton[1].Height.Set(23f, 0f);
-			PerkButton[1].Left.Set(89f + 244f - 12.5f, 0f); PerkButton[1].Top.Set(14f + 180f - 12f, 0f);
+			PerkButton[1].Left.Set(40f + 244f - 12.5f, 0f); PerkButton[1].Top.Set(14f + 180f - 12f, 0f);
 			PerkButton[1].OnClick += (a, b) => PerkButtonClicked(1);
 			PerkButton[1].OnRightClick += (a, b) => PerkDescClose();
 			LevelUI.Append(PerkButton[1]);
 
 			PerkButton[2] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Overlord"));
-			PerkButton[2].Width.Set(23f, 0f); PerkButton[1].Height.Set(23f, 0f);
-			PerkButton[2].Left.Set(129f + 244f - 12.5f, 0f); PerkButton[2].Top.Set(14f + 180f - 12f, 0f);
+			PerkButton[2].Width.Set(23f, 0f); PerkButton[2].Height.Set(23f, 0f);
+			PerkButton[2].Left.Set(86f + 244f - 12.5f, 0f); PerkButton[2].Top.Set(14f + 180f - 12f, 0f);
 			PerkButton[2].OnClick += (a, b) => PerkButtonClicked(2);
 			PerkButton[2].OnRightClick += (a, b) => PerkDescClose();
 			LevelUI.Append(PerkButton[2]);
 
-			for (int i = 1; i <= 2; i++)
+			PerkButton[3] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Jumpman"));
+			PerkButton[3].Width.Set(23f, 0f); PerkButton[3].Height.Set(23f, 0f);
+			PerkButton[3].Left.Set(132f + 244f - 12.5f, 0f); PerkButton[3].Top.Set(14f + 180f - 12f, 0f);
+			PerkButton[3].OnClick += (a, b) => PerkButtonClicked(3);
+			PerkButton[3].OnRightClick += (a, b) => PerkDescClose();
+			LevelUI.Append(PerkButton[3]);
+
+			PerkButton[4] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_ReaperofStars"));
+			PerkButton[4].Width.Set(23f, 0f); PerkButton[4].Height.Set(23f, 0f);
+			PerkButton[4].Left.Set(178f + 244f - 12.5f, 0f); PerkButton[4].Top.Set(14f + 180f - 12f, 0f);
+			PerkButton[4].OnClick += (a, b) => PerkButtonClicked(4);
+			PerkButton[4].OnRightClick += (a, b) => PerkDescClose();
+			LevelUI.Append(PerkButton[4]);
+
+			for (int i = 1; i <= 4; i++)
 			{
 				PerkText[i] = new UIText("");
 				PerkText[i].Left.Set(0f, 0.75f); PerkText[i].Top.Set(0f, 0.5f);
@@ -333,6 +349,22 @@ namespace Crescent.UI
 						}
 						Main.PlaySound(SoundID.MenuTick);
 						break;
+					case 3:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50 * (1+player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]))
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 50 * (1+player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]++;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
+					case 4:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]))
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]);
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]++;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
 				}
 			}
 			else
@@ -355,11 +387,29 @@ namespace Crescent.UI
 						}
 						Main.PlaySound(SoundID.MenuTick);
 						break;
+					case 3:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3] >= 1)
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 50 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3];
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]--;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
+					case 4:
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4] >= 1)
+						{
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 25 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4];
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]--;
+						}
+						Main.PlaySound(SoundID.MenuTick);
+						break;
 				}
 			}
 			//Descriptions
 			PerkRelevantDescString[1] = "Each point into this perk\ngives +20% flight\nCosts " + (int)Math.Pow(2 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] / 2F, 3) + " points to upgrade";
 			PerkRelevantDescString[2] = "Each point into this perk\ngives +1 maximum minions\nCosts " + (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])) + " points to upgrade";
+			PerkRelevantDescString[3] = "Each point into this perk\nboosts your jump 1 block\nCosts " + 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]) + " points to upgrade";
+			PerkRelevantDescString[4] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]) + " points to upgrade";
 			PerkDscText.SetText(PerkRelevantDescString[PerkSelected]);
 		}
 
@@ -369,6 +419,8 @@ namespace Crescent.UI
 			//Descriptions
 			PerkRelevantDescString[1] = "Each point into this perk\ngives +20% flight\nCosts " + (int)Math.Pow(2 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] / 2F, 3) + " points to upgrade";
 			PerkRelevantDescString[2] = "Each point into this perk\ngives +1 maximum minions\nCosts " + (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])) + " points to upgrade";
+			PerkRelevantDescString[3] = "Each point into this perk\nboosts your jump 1 block\nCosts " + 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]) + " points to upgrade";
+			PerkRelevantDescString[4] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]) + " points to upgrade";
 			PerkDsc.Remove();
 			PerkIncButton.Remove();
 			LevelUI.Append(PerkDsc);
@@ -389,8 +441,11 @@ namespace Crescent.UI
 
 		private void PerkDescClose()
 		{
-			PerkDsc.Remove();
-			PerkIncButton.Remove();
+			if (LevelUI.HasChild(PerkDsc))
+			{
+				PerkDsc.Remove();
+				PerkIncButton.Remove();
+			}
 			PerkSelected = -1;
 			Main.PlaySound(SoundID.MenuTick);
 		}
@@ -479,7 +534,7 @@ namespace Crescent.UI
 			VitText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5].ToString());
 			RadText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6].ToString());
 			SttText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt.ToString());
-			for (int i = 1; i <= 2; i++)
+			for (int i = 1; i <= 4; i++)
 			{
 				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] > 0) { PerkText[i].SetText("(" + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i].ToString() + ")"); }
 				else { PerkText[i].SetText(""); }

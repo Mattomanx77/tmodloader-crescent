@@ -2,4 +2,4 @@ author = Infera
 version = 0.2.1
 displayName = Crescent
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*
-weakReferences = ThoriumMod@0.10
+weakReferences = ThoriumMod@1.4.3.3, Tremor@1.3.2.7

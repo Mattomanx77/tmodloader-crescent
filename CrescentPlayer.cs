@@ -63,16 +63,28 @@ namespace Crescent
 			player.statLifeMax2 = (int)(player.statLifeMax * (Pos + Lnum[5] / Use));
 			player.statManaMax2 = (int)(player.statManaMax * (Pos + Lnum[4] / Use));
 			player.meleeDamage = player.meleeDamage * (Pos + Lnum[0] / Use);
-			player.thrownDamage = player.thrownDamage * (Pos + Lnum[2] / Use);
+			player.thrownDamage = player.thrownDamage * (Pos + Lnum[0] / Use);
 			player.rangedDamage = player.rangedDamage * (Pos + Lnum[2] / Use);
 			player.magicDamage = player.magicDamage * (Pos + Lnum[4] / Use);
-			player.minionDamage = player.minionDamage * (Pos + Lnum[6] / Use);
+			player.minionDamage *= (Pos + Lnum[6] / Use);
 			player.maxMinions = player.maxMinions + Perk[2];
+			if (ModLoader.GetMod("ThoriumMod") != null)
+			{
+				player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicDamage *= (Pos + Lnum[2] / Use);
+				player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[2] / Use));
+				player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantBoost *= (Pos + Lnum[6] / Use);
+			}
+			if (ModLoader.GetMod("Tremor") != null)
+			{
+				player.GetModPlayer<Tremor.MPlayer>().alchemicalDamage *= (Pos + Lnum[4] / Use);
+			}
 		}
 
 		public override void PostUpdateEquips()
 		{
 			player.statDefense = (int)(player.statDefense * (Pos + Lnum[3] / Use));
+			Player.jumpHeight += Perk[3]*2;
+			//Player.jumpSpeed *= 1 + Perk[3]*0.01f;
 		}
 
 		public override void PostUpdateRunSpeeds()
@@ -86,12 +98,14 @@ namespace Crescent
 		{
 			Lexp += damage;
 			CheckLifeforce(Lexp);
+			player.statMana += Perk[4];
 		}
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			Lexp += damage;
 			CheckLifeforce(Lexp);
+			player.statMana += Perk[4];
 		}
 
 		private void CheckLifeforce(int lexp)

@@ -15,8 +15,6 @@ See the ingame UI for perks and their descriptions!
 
 
 -IN THE FUTURE (HOPEFULLY)-
-Support for Tremor's Alchemist class(int)
-Support for Thorium's Healer(rad) and Bard(dex) classes
 More perks
 Improve the UI to fit more into Terraria's theme. (Currently it's just a placeholder)
 Something to make this mod balanced (Open to suggestions)
@@ -24,13 +22,29 @@ Something to make this mod balanced (Open to suggestions)
 
 
 -CHANGELOG-
-v0.2.1
+v0.3 - Mod Compadable!
++Support for Tremor's Alchemist class(int)
++Support for Thorium's Healer(rad) and Bard(dex) classes
+Thankyou to someone I cannot name for this.
++Added 2 new perks "Jumpman" and "Reaper of Stars"
+
+v0.2.1 - Tweaks and Fixes
 +Fixed that Agility and Dexterity were accidentally swapped
 =Balance change, each point into a stat only effects by .1% (formerly .5%), but now each level you get 10 points instead of 7
 
-v0.2
+v0.2 - Perk Overhaul and Optimization
 +Added 1 new perk "Overlord"
 +Some optimization
 +A bug with point calculation
 -Save format had to change a bit,
 you'll have to respec. Sorry :(
+
+v0.1.1
+-Removed debug testing items. Oops!
+
+v0.1
++Initial release
++First test of perks
+
+v0.0
++Implement a functioning UI and RPG mechanics

@@ -419,7 +419,7 @@ namespace Crescent.UI
 		{
 			Player player = Main.player[Main.myPlayer];
 			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[1] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[2] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[4] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6] = 0;
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl * 7;
+			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl * 10;
 			for (int i = 0; i < 8; i++)
 			{
 				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] = 0;

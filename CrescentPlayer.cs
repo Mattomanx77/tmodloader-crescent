@@ -15,7 +15,7 @@ namespace Crescent
         public float[] Lnum = new float[7];
         public float Pos = 1.0f;
 		public float Pos2 = 1.0f;
-		public float Use = 200f;
+		public float Use = 1000f;
 		public int[] Perk = new int[32];
 
 		public override TagCompound Save()
@@ -63,8 +63,8 @@ namespace Crescent
 			player.statLifeMax2 = (int)(player.statLifeMax * (Pos + Lnum[5] / Use));
 			player.statManaMax2 = (int)(player.statManaMax * (Pos + Lnum[4] / Use));
 			player.meleeDamage = player.meleeDamage * (Pos + Lnum[0] / Use);
-			player.thrownDamage = player.thrownDamage * (Pos + Lnum[1] / Use);
-			player.rangedDamage = player.rangedDamage * (Pos + Lnum[1] / Use);
+			player.thrownDamage = player.thrownDamage * (Pos + Lnum[2] / Use);
+			player.rangedDamage = player.rangedDamage * (Pos + Lnum[2] / Use);
 			player.magicDamage = player.magicDamage * (Pos + Lnum[4] / Use);
 			player.minionDamage = player.minionDamage * (Pos + Lnum[6] / Use);
 			player.maxMinions = player.maxMinions + Perk[2];
@@ -77,8 +77,8 @@ namespace Crescent
 
 		public override void PostUpdateRunSpeeds()
 		{
-			player.runAcceleration = player.runAcceleration * (Pos2 + Lnum[2] / Use*2);
-			player.maxRunSpeed = player.maxRunSpeed * (Pos2 + Lnum[2] / Use*2);
+			player.runAcceleration = player.runAcceleration * (Pos2 + Lnum[1] / Use*2);
+			player.maxRunSpeed = player.maxRunSpeed * (Pos2 + Lnum[1] / Use*2);
 			player.wingTimeMax = (int)(player.wingTimeMax * (1+Perk[1]/ 5F));
 		}
 
@@ -100,7 +100,7 @@ namespace Crescent
 			{
 				Llvl++;
 				Lexp -= Llxp;
-				Lstt += 7;
+				Lstt += 10;
 				Llxp = (int)(Math.Pow((Llvl + 1) * 333, 1.2));
 				Main.PlaySound(2, -1, -1, 4);
 			}

@@ -20,23 +20,20 @@ namespace Crescent.UI
 		public Texture2D ManaPoint1 = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarFilled1");
 		public Texture2D ManaPoint2 = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarFilled2");
 		public Texture2D FloralImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeFloral");
-		public Texture2D buttonHideImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/HideButton");
+		public Texture2D buttonHideImage = ModLoader.GetTexture("Crescent/Assets/UI/HideButton");
 		public Texture2D buttonRespecImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RespecButton");
 		public Texture2D buttonRestartImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RestartButton");
-		public Texture2D buttonStrengthImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/StrengthButton");
-		public Texture2D buttonAgilityImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/AgilityButton");
-		public Texture2D buttonDexterityImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/DexterityButton");
-		public Texture2D buttonFortitudeImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/FortitudeButton");
-		public Texture2D buttonIntelligenceImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/IntelligenceButton");
-		public Texture2D buttonVitalityImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/VitalityButton");
-		public Texture2D buttonRadianceImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RadianceButton");
-		public UIImageButton PerkIncButton;
+		public UIImage PerkIncButton;
 		public string[] PerkRelevantString = new string[32];
 		public string[] PerkRelevantDescString = new string[32];
+		public string[] SkillRelevantString = new string[32];
+		public string[] SkillRelevantDescString = new string[32];
 		public Texture2D PerkIncButtonImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/PlusButton");
 		public int PerkSelected;
-		public UIImageButton[] PerkButton = new UIImageButton[32];
+		public UIImage[] PerkButton = new UIImage[32];
+		public UIImage[] SkillButton = new UIImage[32];
 		public UIText[] PerkText = new UIText[32];
+		public UIText[] SkillText = new UIText[32];
 		private LifeBar Life = new LifeBar();
 		private ManaBar Mana = new ManaBar();
 		private UIImage Exp = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ExpBar"));
@@ -51,18 +48,17 @@ namespace Crescent.UI
 		private Color Gold = new Color(255, 191, 0);
 		private UIText LifeText = new UIText("0");
 		private UIText ManaText = new UIText("0");
-		private LevelUIBox LevelUI = new LevelUIBox();
+		private StatUIBox StatUI = new StatUIBox();
+		private PerkUIBox PerkUI = new PerkUIBox();
 		public bool SkillMenuVisible;
-		public UIText StrText = new UIText("");
-		public UIText AgiText = new UIText("");
-		public UIText DexText = new UIText("");
-		public UIText ForText = new UIText("");
-		public UIText IntText = new UIText("");
-		public UIText VitText = new UIText("");
-		public UIText RadText = new UIText("");
 		public UIText SttText = new UIText("");
+		public UIText[] StatText = new UIText[10];
+		public UIImage[] StatButton = new UIImage[10];
 		public UIText PerkDscTitleText = new UIText("");
 		public UIText PerkDscText = new UIText("");
+		public int NumStats = 7;
+		public int NumPerks = 4;
+		private Vector2 offset;public bool dragging = false;
 
 		public override void OnInitialize()
 		{
@@ -167,118 +163,80 @@ namespace Crescent.UI
 			base.Append(FlorLeft);
 			base.Append(FlorRight);
 			#endregion
-			#region LevelUI
-			LevelUI.Height.Set(425f, 0f);
-			LevelUI.Width.Set(611f, 0f);
-			LevelUI.Left.Set(-305.5f, 0.5f);
-			LevelUI.Top.Set(80f, 0f);
-			LevelUI.backgroundColor = new Color(255, 255, 255, 255);
-			//Append(LevelUI);
+			#region StatUI
+			StatUI.Height.Set(NumStats*48 + 81f, 0f);
+			StatUI.Width.Set(104f, 0f);
+			StatUI.Left.Set(-363f, 0.5f);
+			StatUI.Top.Set(80f, 0f);
+			StatUI.OnMouseDown += new MouseEvent(DragStart);
+			StatUI.OnMouseUp += new MouseEvent(DragEnd);
+			//Append(StatUI);
 
-			UIImageButton hideButton = new UIImageButton(buttonHideImage);
-			hideButton.Width.Set(15f, 0f); hideButton.Height.Set(15f, 0f);
-			hideButton.Left.Set(595f, 0f); hideButton.Top.Set(1f, 0f);
-			hideButton.OnClick += new MouseEvent(HideButtonClicked);
-			LevelUI.Append(hideButton);
-
-			UIImageButton respecButton = new UIImageButton(buttonRespecImage);
+			UIImage respecButton = new UIImage(buttonRespecImage);
 			respecButton.Width.Set(15f, 0f);respecButton.Height.Set(15f, 0f);
-			respecButton.Left.Set(53f, 0f);respecButton.Top.Set(361f, 0f);
+			respecButton.Left.Set(StatUI.Width.Pixels - 50f, 0f); respecButton.Top.Set(StatUI.Height.Pixels - 63f, 0f);
 			respecButton.OnClick += new MouseEvent(RespecButtonClicked);
-			LevelUI.Append(respecButton);
+			StatUI.Append(respecButton);
 
-			UIImageButton restartButton = new UIImageButton(buttonRestartImage);
-			restartButton.Width.Set(15f, 0f);restartButton.Height.Set(15f, 0f);
-			restartButton.Left.Set(81f, 0f);restartButton.Top.Set(361f, 0f);
+			UIImage restartButton = new UIImage(buttonRestartImage);
+			restartButton.Width.Set(17f, 0f);restartButton.Height.Set(17f, 0f);
+			restartButton.Left.Set(StatUI.Width.Pixels - 24f, 0f);restartButton.Top.Set(StatUI.Height.Pixels - 63f, 0f);
 			restartButton.OnClick += new MouseEvent(RestartButtonClicked);
-			LevelUI.Append(restartButton);
+			StatUI.Append(restartButton);
 
-			UIImageButton StrengthButton = new UIImageButton(buttonStrengthImage);
-			StrengthButton.Width.Set(48f, 0f);StrengthButton.Height.Set(48f, 0f);
-			StrengthButton.Left.Set(1f, 0f);StrengthButton.Top.Set(32f, 0f);
-			StrengthButton.OnClick += (a, b) => StatButtonClicked(0, true);
-			StrengthButton.OnRightClick += (a, b) => StatButtonClicked(0, false);
-			LevelUI.Append(StrengthButton);
-			StrText.Left.Set(52f, 0f);
-			StrText.Top.Set(16f, 0f);
-			StrengthButton.Append(StrText);
+			UIImage hideStatUIButton = new UIImage(buttonHideImage);
+			hideStatUIButton.Width.Set(17f, 0f); hideStatUIButton.Height.Set(17f, 0f);
+			hideStatUIButton.Left.Set(StatUI.Width.Pixels - 22f, 0f); hideStatUIButton.Top.Set(6f, 0f);
+			hideStatUIButton.OnClick += (a, b) => HideButtonClicked(0);
+			StatUI.Append(hideStatUIButton);
 
-			UIImageButton AgilityButton = new UIImageButton(buttonAgilityImage);
-			AgilityButton.Width.Set(48f, 0f);AgilityButton.Height.Set(48f, 0f);
-			AgilityButton.Left.Set(1f, 0f);AgilityButton.Top.Set(80f, 0f);
-			AgilityButton.OnClick += (a, b) => StatButtonClicked(1, true);
-			AgilityButton.OnRightClick += (a, b) => StatButtonClicked(1, false);
-			LevelUI.Append(AgilityButton);
-			AgiText.Left.Set(52f, 0f);
-			AgiText.Top.Set(16f, 0f);
-			AgilityButton.Append(AgiText);
+			StatButton[0] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/StrengthButton"));
+			StatButton[1] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/AgilityButton"));
+			StatButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/DexterityButton"));
+			StatButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/FortitudeButton"));
+			StatButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/IntelligenceButton"));
+			StatButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/VitalityButton"));
+			StatButton[6] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RadianceButton"));
 
-			UIImageButton DexterityButton = new UIImageButton(buttonDexterityImage);
-			DexterityButton.Width.Set(48f, 0f);DexterityButton.Height.Set(48f, 0f);
-			DexterityButton.Left.Set(1f, 0f);DexterityButton.Top.Set(128f, 0f);
-			DexterityButton.OnClick += (a, b) => StatButtonClicked(2, true);
-			DexterityButton.OnRightClick += (a, b) => StatButtonClicked(2, false);
-			LevelUI.Append(DexterityButton);
-			DexText.Left.Set(52f, 0f);
-			DexText.Top.Set(16f, 0f);
-			DexterityButton.Append(DexText);
+			for (int i = 0; i < NumStats; i++)
+			{
+				int n = i;
+				StatButton[i].Left.Set(1f, 0f); StatButton[i].Top.Set(i*48 + 24f, 0f);
+				StatButton[i].OnClick += (a, b) => StatButtonClicked(n, true);
+				StatButton[i].OnRightClick += (a, b) => StatButtonClicked(n, false);
+				StatUI.Append(StatButton[i]);
+				StatText[i] = new UIText("");
+				StatText[i].Left.Set(52f, 0f);
+				StatText[i].Top.Set(16f, 0f);
+				StatButton[i].Append(StatText[i]);
+			}
 
-			UIImageButton FortitudeButton = new UIImageButton(buttonFortitudeImage);
-			FortitudeButton.Width.Set(48f, 0f);FortitudeButton.Height.Set(48f, 0f);
-			FortitudeButton.Left.Set(1f, 0f);FortitudeButton.Top.Set(176f, 0f);
-			FortitudeButton.OnClick += (a, b) => StatButtonClicked(3, true);
-			FortitudeButton.OnRightClick += (a, b) => StatButtonClicked(3, false);
-			LevelUI.Append(FortitudeButton);
-			ForText.Left.Set(52f, 0f);
-			ForText.Top.Set(16f, 0f);
-			FortitudeButton.Append(ForText);
+			SttText.Left.Set(17f, 0f);
+			SttText.Top.Set(NumStats * 48 + 54f, 0f);
+			StatUI.Append(SttText);
+			#endregion
+			#region PerkUI
+			PerkUI.Height.Set(386f, 0f);
+			PerkUI.Width.Set(514f, 0f);
+			PerkUI.Left.Set(-257f, 0.5f);
+			PerkUI.Top.Set(80f, 0f);
 
-			UIImageButton IntelligenceButton = new UIImageButton(buttonIntelligenceImage);
-			IntelligenceButton.Width.Set(48f, 0f);IntelligenceButton.Height.Set(48f, 0f);
-			IntelligenceButton.Left.Set(1f, 0f);IntelligenceButton.Top.Set(224f, 0f);
-			IntelligenceButton.OnClick += (a, b) => StatButtonClicked(4, true);
-			IntelligenceButton.OnRightClick += (a, b) => StatButtonClicked(4, false);
-			LevelUI.Append(IntelligenceButton);
-			IntText.Left.Set(52f, 0f);
-			IntText.Top.Set(16f, 0f);
-			IntelligenceButton.Append(IntText);
-
-			UIImageButton VitalityButton = new UIImageButton(buttonVitalityImage);
-			VitalityButton.Width.Set(48f, 0f);VitalityButton.Height.Set(48f, 0f);
-			VitalityButton.Left.Set(1f, 0f);VitalityButton.Top.Set(272f, 0f);
-			VitalityButton.OnClick += (a, b) => StatButtonClicked(5, true);
-			VitalityButton.OnRightClick += (a, b) => StatButtonClicked(5, false);
-			LevelUI.Append(VitalityButton);
-			VitText.Left.Set(52f, 0f);
-			VitText.Top.Set(16f, 0f);
-			VitalityButton.Append(VitText);
-
-			UIImageButton RadianceButton = new UIImageButton(buttonRadianceImage);
-			RadianceButton.Width.Set(48f, 0f);RadianceButton.Height.Set(48f, 0f);
-			RadianceButton.Left.Set(1f, 0f);RadianceButton.Top.Set(320f, 0f);
-			RadianceButton.OnClick += (a, b) => StatButtonClicked(6, true);
-			RadianceButton.OnRightClick += (a, b) => StatButtonClicked(6, false);
-			LevelUI.Append(RadianceButton);
-			RadText.Left.Set(52f, 0f);
-			RadText.Top.Set(16f, 0f);
-			RadianceButton.Append(RadText);
-
-			SttText.Left.Set(15f, 0f);
-			SttText.Top.Set(402f, 0f);
-			LevelUI.Append(SttText);
-
-			//Perks
+			UIImage hidePerkUIButton = new UIImage(buttonHideImage);
+			hidePerkUIButton.Width.Set(17f, 0f); hidePerkUIButton.Height.Set(17f, 0f);
+			hidePerkUIButton.Left.Set(PerkUI.Width.Pixels - 17f, 0f); hidePerkUIButton.Top.Set(0f, 0f);
+			hidePerkUIButton.OnClick += (a, b) => HideButtonClicked(1);
+			PerkUI.Append(hidePerkUIButton);
 
 			PerkDsc.backgroundColor = new Color(255, 255, 255, 255);
 			PerkDsc.Width.Set(250f, 0f);PerkDsc.Height.Set(100f, 0f);
 			PerkDsc.Top.Set(23f, 0f);
-			LevelUI.Append(PerkDsc);
+			PerkUI.Append(PerkDsc);
 
-			PerkIncButton = new UIImageButton(PerkIncButtonImage);
+			PerkIncButton = new UIImage(PerkIncButtonImage);
 			PerkIncButton.Width.Set(15f, 0f); PerkIncButton.Height.Set(15f, 0f);
 			PerkIncButton.OnClick += (a, b) => PerkIncButtonClicked(true);
 			PerkIncButton.OnRightClick += (a, b) => PerkIncButtonClicked(false);
-			LevelUI.Append(PerkIncButton);
+			PerkUI.Append(PerkIncButton);
 			
 			//Names
 			PerkRelevantString[1] = "Wing Muscle";
@@ -286,36 +244,20 @@ namespace Crescent.UI
 			PerkRelevantString[3] = "Jumpman";
 			PerkRelevantString[4] = "Reaper of Stars";
 			//Buttons
-			PerkButton[1] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_WingMuscle"));
-			PerkButton[1].Width.Set(23f, 0f); PerkButton[1].Height.Set(23f, 0f);
-			PerkButton[1].Left.Set(40f + 244f - 12.5f, 0f); PerkButton[1].Top.Set(14f + 180f - 12f, 0f);
-			PerkButton[1].OnClick += (a, b) => PerkButtonClicked(1);
-			PerkButton[1].OnRightClick += (a, b) => PerkDescClose();
-			LevelUI.Append(PerkButton[1]);
+			PerkButton[1] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_WingMuscle"));
+			PerkButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Overlord"));
+			PerkButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Jumpman"));
+			PerkButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_ReaperofStars"));
 
-			PerkButton[2] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Overlord"));
-			PerkButton[2].Width.Set(23f, 0f); PerkButton[2].Height.Set(23f, 0f);
-			PerkButton[2].Left.Set(86f + 244f - 12.5f, 0f); PerkButton[2].Top.Set(14f + 180f - 12f, 0f);
-			PerkButton[2].OnClick += (a, b) => PerkButtonClicked(2);
-			PerkButton[2].OnRightClick += (a, b) => PerkDescClose();
-			LevelUI.Append(PerkButton[2]);
-
-			PerkButton[3] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Jumpman"));
-			PerkButton[3].Width.Set(23f, 0f); PerkButton[3].Height.Set(23f, 0f);
-			PerkButton[3].Left.Set(132f + 244f - 12.5f, 0f); PerkButton[3].Top.Set(14f + 180f - 12f, 0f);
-			PerkButton[3].OnClick += (a, b) => PerkButtonClicked(3);
-			PerkButton[3].OnRightClick += (a, b) => PerkDescClose();
-			LevelUI.Append(PerkButton[3]);
-
-			PerkButton[4] = new UIImageButton(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_ReaperofStars"));
-			PerkButton[4].Width.Set(23f, 0f); PerkButton[4].Height.Set(23f, 0f);
-			PerkButton[4].Left.Set(178f + 244f - 12.5f, 0f); PerkButton[4].Top.Set(14f + 180f - 12f, 0f);
-			PerkButton[4].OnClick += (a, b) => PerkButtonClicked(4);
-			PerkButton[4].OnRightClick += (a, b) => PerkDescClose();
-			LevelUI.Append(PerkButton[4]);
-
-			for (int i = 1; i <= 4; i++)
+			for (int i = 1; i <= NumPerks; i++)
 			{
+				int n = i;
+				PerkButton[i].Width.Set(23f, 0f); PerkButton[i].Height.Set(23f, 0f);
+				PerkButton[i].Left.Set((2*(i-(0.5f+NumPerks/2F))*23)+257-12f, 0f);
+				PerkButton[i].Top.Set(193-12f, 0f);
+				PerkButton[i].OnClick += (a, b) => PerkButtonClicked(n);
+				PerkButton[i].OnRightClick += (a, b) => PerkDescClose();
+				PerkUI.Append(PerkButton[i]);
 				PerkText[i] = new UIText("");
 				PerkText[i].Left.Set(0f, 0.75f); PerkText[i].Top.Set(0f, 0.5f);
 				PerkButton[i].Append(PerkText[i]);
@@ -324,6 +266,23 @@ namespace Crescent.UI
 			PerkDsc.Remove();
 			PerkIncButton.Remove();
 			#endregion
+		}
+
+		private void DragStart(UIMouseEvent evt, UIElement listeningElement)
+		{
+			offset = new Vector2(evt.MousePosition.X - StatUI.Left.Pixels, evt.MousePosition.Y - StatUI.Top.Pixels);
+			dragging = true;
+		}
+
+		private void DragEnd(UIMouseEvent evt, UIElement listeningElement)
+		{
+			Vector2 end = evt.MousePosition;
+			dragging = false;
+
+			StatUI.Left.Set(end.X - offset.X, 0.5f);
+			StatUI.Top.Set(end.Y - offset.Y, 0f);
+
+			Recalculate();
 		}
 
 		private void PerkIncButtonClicked(bool LeftClick)
@@ -423,8 +382,8 @@ namespace Crescent.UI
 			PerkRelevantDescString[4] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]) + " points to upgrade";
 			PerkDsc.Remove();
 			PerkIncButton.Remove();
-			LevelUI.Append(PerkDsc);
-			LevelUI.Append(PerkIncButton);
+			PerkUI.Append(PerkDsc);
+			PerkUI.Append(PerkIncButton);
 			PerkDsc.Left.Set(PerkButton[value].Left.Pixels - PerkDsc.Width.Pixels / 2 + 12f, 0f);
 			PerkDsc.Top.Set(PerkButton[value].Top.Pixels + 23f, 0f);
 			PerkIncButton.Left.Set(PerkButton[value].Left.Pixels + 23f, 0f);
@@ -441,7 +400,7 @@ namespace Crescent.UI
 
 		private void PerkDescClose()
 		{
-			if (LevelUI.HasChild(PerkDsc))
+			if (StatUI.HasChild(PerkDsc))
 			{
 				PerkDsc.Remove();
 				PerkIncButton.Remove();
@@ -450,17 +409,17 @@ namespace Crescent.UI
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
-		private void HideButtonClicked(UIMouseEvent evt, UIElement listeningElement)
+		private void HideButtonClicked(int num)
 		{
-			LevelUI.Remove();
+			if(num == 0)StatUI.Remove();
+			else PerkUI.Remove();
 			Main.PlaySound(SoundID.MenuClose);
 		}
 
 		private void StatButtonClicked(int num, bool LeftClick)
 		{
 			Player player = Main.player[Main.myPlayer];
-			int i = 1;
-			if (!LeftClick)i = 50;
+			int i = LeftClick ? 1 : 50;
 
 			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= i)
 			{
@@ -498,7 +457,8 @@ namespace Crescent.UI
 
 		private void TopRightClicked(UIMouseEvent evt, UIElement listeningElement)
 		{
-			Append(LevelUI);
+			Append(StatUI);
+			Append(PerkUI);
 			Main.PlaySound(SoundID.MenuOpen);
 		}
 
@@ -522,18 +482,18 @@ namespace Crescent.UI
 			}
 
 			//Status bars
-			if (SkillMenuVisible)
+			for (int i = 0; i < NumStats; i++)
 			{
-
+				StatText[i].SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[i].ToString());
 			}
-			StrText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0].ToString());
-			AgiText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[1].ToString());
-			DexText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[2].ToString());
-			ForText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3].ToString());
-			IntText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[4].ToString());
-			VitText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5].ToString());
-			RadText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6].ToString());
 			SttText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt.ToString());
+
+			//Stats window
+			if (dragging)
+			{
+				StatUI.Left.Set(Main.mouseX - offset.X, 0.5f);
+				StatUI.Top.Set(Main.mouseY - offset.Y, 0f);
+			}
 			for (int i = 1; i <= 4; i++)
 			{
 				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] > 0) { PerkText[i].SetText("(" + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i].ToString() + ")"); }
@@ -863,8 +823,6 @@ namespace Crescent.UI
 					Bar = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarMid");
 				if (End == null)
 					End = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarEnd");
-				if (Spc == null)
-					Spc = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarSpecialCase");
 			}
 
 			protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -872,16 +830,9 @@ namespace Crescent.UI
 				CalculatedStyle dimensions = GetDimensions();
 				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
 				int height = (int)Math.Ceiling(dimensions.Height);
-
-				if (height > 40)
-				{
-					spriteBatch.Draw(Bar, new Rectangle(point1.X, point1.Y, 40, height - 43), backgroundColor);
-					spriteBatch.Draw(End, new Rectangle(point1.X, point1.Y + height - 43, 40, 43), backgroundColor);
-				}
-				else
-				{
-					spriteBatch.Draw(Spc, new Rectangle(point1.X, point1.Y + height - 43, 40, 45), backgroundColor);
-				}
+				
+				spriteBatch.Draw(Bar, new Rectangle(point1.X, point1.Y, 40, height - 43), backgroundColor);
+				spriteBatch.Draw(End, new Rectangle(point1.X, point1.Y + height - 43, 40, 43), backgroundColor);
 			}
 		}
 
@@ -967,21 +918,61 @@ namespace Crescent.UI
 			}
 		}
 
-		class LevelUIBox : UIElement
+		class StatUIBox : UIElement
 		{
-			public Color backgroundColor = Color.Gray;
-			private static Texture2D LifeforceBox;
-			private static Texture2D LifeforceBoxBG;
-			private static Texture2D Twinkle;
+			public Color backgroundColor = new Color(223, 223, 223);
+			private static Texture2D StaticCorner;
+			private static Texture2D StatsText;
+			private static Texture2D StatsBottom;
+			private static Texture2D PointsPane;
 
-			public LevelUIBox()
+			public StatUIBox()
 			{
-				if (LifeforceBox == null)
-					LifeforceBox = ModLoader.GetTexture("Crescent/Assets/UI/LifeforceBox");
-				if (LifeforceBoxBG == null)
-					LifeforceBoxBG = ModLoader.GetTexture("Crescent/Assets/UI/LifeforceBoxBackground");
+				if (StaticCorner == null)
+					StaticCorner = ModLoader.GetTexture("Crescent/Assets/UI/Static_Corner");
+				if (StatsText == null)
+					StatsText = ModLoader.GetTexture("Crescent/Assets/UI/StatsText");
+				if (StatsBottom == null)
+					StatsBottom = ModLoader.GetTexture("Crescent/Assets/UI/StatsBottom");
+				if (PointsPane == null)
+					PointsPane = ModLoader.GetTexture("Crescent/Assets/UI/PointsPane");
+			}
+
+			protected override void DrawSelf(SpriteBatch spriteBatch)
+			{
+				CalculatedStyle dimensions = GetDimensions();
+				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
+				int width = (int)Math.Ceiling(dimensions.Width);	
+				int height = (int)Math.Ceiling(dimensions.Height);
+				
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X, point1.Y, 104, height - 40), new Color(0, 0, 0));
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 1, point1.Y + 1, 102, height - 42), backgroundColor);
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 1, point1.Y + 1, 99, 3), new Color(255, 255, 255, 127));
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 1, point1.Y + 1, 3, height - 45), new Color(255, 255, 255, 127));
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 4, point1.Y + height - 44, 99, 3), new Color(0, 0, 0, 63));
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 100, point1.Y + 1, 3, height - 45), new Color(0, 0, 0, 63));
+				spriteBatch.Draw(StaticCorner, new Rectangle(point1.X + 100, point1.Y + 1, 3, 3), backgroundColor);
+				spriteBatch.Draw(StaticCorner, new Rectangle(point1.X + 1, point1.Y + height - 44, 3, 3), backgroundColor);
+				spriteBatch.Draw(StatsText, new Rectangle(point1.X + 3, point1.Y + 5, 59, 19), backgroundColor);
+				spriteBatch.Draw(StatsBottom, new Rectangle(point1.X + 3, point1.Y + height - 57, 44, 3), backgroundColor);
+
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 11, point1.Y + height - 38, 82, 38), backgroundColor);
+				spriteBatch.Draw(PointsPane, new Rectangle(point1.X + 11, point1.Y + height - 38, 82, 38), backgroundColor);
+			}
+		}
+
+		class PerkUIBox : UIElement
+		{
+			public Color backgroundColor = new Color(255, 255, 255);
+			private static Texture2D Twinkle;
+			private static Texture2D Tex;
+
+			public PerkUIBox()
+			{
 				if (Twinkle == null)
 					Twinkle = ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Twinkle");
+				if (Tex == null)
+					Tex = ModLoader.GetTexture("Crescent/Assets/UI/PerkBox");
 			}
 
 			protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -990,12 +981,13 @@ namespace Crescent.UI
 				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
 				int width = (int)Math.Ceiling(dimensions.Width);
 				int height = (int)Math.Ceiling(dimensions.Height);
-				spriteBatch.Draw(LifeforceBoxBG, new Rectangle(point1.X, point1.Y, width, height), backgroundColor);
+
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X, point1.Y, width, height), new Color(0, 0, 0));
 				spriteBatch.Draw(Twinkle, new Rectangle(
-					(int)(point1.X + 347 + Math.Sin((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 244),
-					(int)(point1.Y + 188 + Math.Cos((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 180),
+					(int)(point1.X + 13 + Math.Sin((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 244 + 244),
+					(int)(point1.Y + 13 + Math.Cos((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 180 + 180),
 					12, 12), backgroundColor);
-				spriteBatch.Draw(LifeforceBox, new Rectangle(point1.X, point1.Y, width, height), backgroundColor);
+				spriteBatch.Draw(Tex, new Rectangle(point1.X, point1.Y, width, height), backgroundColor);
 			}
 		}
 		#endregion

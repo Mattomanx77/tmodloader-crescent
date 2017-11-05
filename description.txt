@@ -1,32 +1,42 @@
 This is a UI/RPG mod.
 I made it in my spare time.
+tl;dr: Stats, skills, and perks!
 
 Adds a level UI (Click the top-right box)
-In this UI, you have 7 stats and numerous perks.
-Strength (Effect: Increase melee damage)
+In this UI, you have 7 stats, numerous perks, and skills.
+Strength (Effect: Increase melee/throwing damage)
 Agility (Effect: Increase movement speed)
-Dexterity (Effect: Increase throwing/ranged damage)
-Fortitude (Effect: Increases overal defence by a percentage)
+Dexterity (Effect: Increase ranged damage)
+Fortitude (Effect: Increases overall defence by 1 every 10 points)
 Intelligence (Effect: Increases magic damage and maximum mana)
 Vitality (Effect: Increase maximum health)
 Radiance (Effect: Increases summoner damage)
-See the ingame UI for perks and their descriptions!
+See the ingame UI for perks/skills and their descriptions!
 
 
 
 -IN THE FUTURE (HOPEFULLY)-
-More perks
-Improve the UI to fit more into Terraria's theme. (Currently it's just a placeholder)
+More perks/skills
+Improve the UI to fit more into Terraria's theme. (Currently it's just a placeholder
+However people seem to like it so I might just make it toggleable.)
 Something to make this mod balanced (Open to suggestions)
-
+Artifact Sacrifice (Collect a large amount of an accessory to unlock a related perk)
+v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4 - UI Overhaul Pt. 1!
++Fixed my mod REQUIRING Thorium and Tremor. I made a strong reference on accident. Sorry!
++Major overhaul of the UI. Soon you'll be able to choose the color of the UI!
++Stats pane completely separate, can be dragged around, and kept open!
+=Changed defence to add defence instead of multiply it
+
 v0.3 - Mod Compadable!
 +Support for Tremor's Alchemist class(int)
 +Support for Thorium's Healer(rad) and Bard(dex) classes
 Thank you to someone I cannot name for this.
 +Added 2 new perks "Jumpman" and "Reaper of Stars"
+=Changed thrower from Dex to Strength
 
 v0.2.1 - Tweaks and Fixes
 +Fixed that Agility and Dexterity were accidentally swapped

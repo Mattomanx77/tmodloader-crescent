@@ -1,7 +1,10 @@
 using System;
 using Terraria;
+using Terraria.ID;
+using Terraria.GameInput;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Microsoft.Xna.Framework;
 
 namespace Crescent
 {
@@ -17,6 +20,8 @@ namespace Crescent
 		public float Pos2 = 1.0f;
 		public float Use = 1000f;
 		public int[] Perk = new int[32];
+		public int[] Skill = new int[32];
+		public int selectedSkill = 0;
 
 		public override TagCompound Save()
 		{
@@ -31,7 +36,8 @@ namespace Crescent
 				{"Lnum4", Lnum[4]},
 				{"Lnum5", Lnum[5]},
 				{"Lnum6", Lnum[6]},
-				{"Perk", Perk}
+				{"Perk", Perk},
+				{"Skill", Skill}
 			};
 		}
 
@@ -56,33 +62,64 @@ namespace Crescent
 			Lnum[5] = tag.GetFloat("Lnum5");
 			Lnum[6] = tag.GetFloat("Lnum6");
 			Perk = tag.GetIntArray("Perk");
+			Skill = tag.GetIntArray("Skill");
+		}
+
+		public override void ProcessTriggers(TriggersSet triggersSet)
+		{
+			if (Crescent.keySkill.JustPressed)
+			{
+				switch (selectedSkill)
+				{
+					case 1:
+						if (player.statMana > 10)
+						{
+							Projectile.NewProjectile(player.Center, (Main.MouseWorld - player.Center).SafeNormalize(Vector2.UnitX) * 5f, 504, (int)(5 * player.magicDamage), 10, player.whoAmI);
+							player.statMana -= 10;
+							player.manaRegenDelay = 50;
+						}
+						break;
+					default:
+						break;
+				}
+			}
 		}
 
 		public override void PreUpdateBuffs()
 		{
 			player.statLifeMax2 = (int)(player.statLifeMax * (Pos + Lnum[5] / Use));
 			player.statManaMax2 = (int)(player.statManaMax * (Pos + Lnum[4] / Use));
-			player.meleeDamage = player.meleeDamage * (Pos + Lnum[0] / Use);
-			player.thrownDamage = player.thrownDamage * (Pos + Lnum[0] / Use);
-			player.rangedDamage = player.rangedDamage * (Pos + Lnum[2] / Use);
-			player.magicDamage = player.magicDamage * (Pos + Lnum[4] / Use);
-			player.minionDamage *= (Pos + Lnum[6] / Use);
+			player.meleeDamage += Lnum[0] / Use;
+			player.thrownDamage += Lnum[0] / Use;
+			player.rangedDamage += Lnum[2] / Use;
+			player.magicDamage += Lnum[4] / Use;
+			player.minionDamage += Lnum[6] / Use;
 			player.maxMinions = player.maxMinions + Perk[2];
-			if (ModLoader.GetMod("ThoriumMod") != null)
+			if (Crescent.mod.thoriumLoaded)
 			{
-				player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicDamage *= (Pos + Lnum[2] / Use);
-				player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[2] / Use));
-				player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantBoost *= (Pos + Lnum[6] / Use);
+				ThoriumDamage();
 			}
-			if (ModLoader.GetMod("Tremor") != null)
+			if (Crescent.mod.tremorLoaded)
 			{
-				player.GetModPlayer<Tremor.MPlayer>().alchemicalDamage *= (Pos + Lnum[4] / Use);
+				TremorDamage();
 			}
+		}
+
+		private void ThoriumDamage()
+		{
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicDamage += Lnum[2] / Use;
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[2] / Use));
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantBoost += Lnum[6] / Use;
+		}
+
+		private void TremorDamage()
+		{
+			player.GetModPlayer<Tremor.MPlayer>().alchemicalDamage += Lnum[4] / Use;
 		}
 
 		public override void PostUpdateEquips()
 		{
-			player.statDefense = (int)(player.statDefense * (Pos + Lnum[3] / Use));
+			player.statDefense += (int)(Pos + Lnum[3] / Use);
 			Player.jumpHeight += Perk[3]*2;
 			//Player.jumpSpeed *= 1 + Perk[3]*0.01f;
 		}

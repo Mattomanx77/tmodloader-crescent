@@ -11,6 +11,9 @@ namespace Crescent
 		internal static Crescent mod;
 		private UserInterface LifeForceInterface;
 		internal LifeForceUI LifeForceUI;
+		public static ModHotKey keySkill;
+		public bool thoriumLoaded;
+		public bool tremorLoaded;
 
 		public Crescent()
 		{
@@ -25,9 +28,12 @@ namespace Crescent
 
 		public override void Load()
 		{
+			thoriumLoaded = ModLoader.GetMod("ThoriumMod") != null;
+			tremorLoaded = ModLoader.GetMod("Tremor") != null;
 			mod = this;
 			if (!Main.dedServ)
 			{
+				keySkill = RegisterHotKey("Skill", "F");
 				LifeForceUI = new LifeForceUI();
 				LifeForceUI.Activate();
 				LifeForceInterface = new UserInterface();

@@ -204,7 +204,7 @@ namespace Crescent.UI
 
 			StatButton[0] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/StrengthButton"));
 			StatButton[1] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/AgilityButton"));
-			StatButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/LuckButton"));
+			StatButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/FortuneButton"));
 			StatButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/DexterityButton"));
 			StatButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/FortitudeButton"));
 			StatButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/IntelligenceButton"));
@@ -323,9 +323,9 @@ namespace Crescent.UI
 						Main.PlaySound(SoundID.MenuTick);
 						break;
 					case 3:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 25 * (1+player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]))
+						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]))
 						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 25 * (1+player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
 							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]++;
 						}
 						Main.PlaySound(SoundID.MenuTick);
@@ -355,7 +355,7 @@ namespace Crescent.UI
 					case 1:
 						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] >= 1)
 						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += (int)Math.Pow(2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] - 1) / 2F, 3);
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 50 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1];
 							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]--;
 						}
 						Main.PlaySound(SoundID.MenuTick);
@@ -371,7 +371,7 @@ namespace Crescent.UI
 					case 3:
 						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3] >= 1)
 						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 50 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3];
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 25 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3];
 							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]--;
 						}
 						Main.PlaySound(SoundID.MenuTick);
@@ -379,7 +379,7 @@ namespace Crescent.UI
 					case 4:
 						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4] >= 1)
 						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 25 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4];
+							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 50 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4];
 							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]--;
 						}
 						Main.PlaySound(SoundID.MenuTick);

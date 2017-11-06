@@ -101,14 +101,14 @@ namespace Crescent
 			player.statLifeMax2 = (int)(player.statLifeMax * (Pos + Lnum[6] / Use));
 			player.statManaMax2 = (int)(player.statManaMax * (Pos + Lnum[5] / Use));
 			player.meleeDamage += Lnum[0] / Use;
-			player.meleeCrit += (int)(Lnum[2] / (Use / 40));
+			player.meleeCrit = LuckFunction(player.meleeCrit);
 			player.thrownDamage += Lnum[0] / Use;
-			player.thrownCrit += (int)(Lnum[2] / (Use / 40));
+			player.thrownCrit = LuckFunction(player.thrownCrit);
 			player.thrownVelocity += Lnum[0] / Use;
 			player.rangedDamage += Lnum[3] / Use;
-			player.rangedCrit += (int)(Lnum[2] / (Use / 40));
+			player.rangedCrit = LuckFunction(player.rangedCrit);
 			player.magicDamage += Lnum[5] / Use;
-			player.magicCrit += (int)(Lnum[2] / (Use / 40));
+			player.magicCrit = LuckFunction(player.magicCrit);
 			player.minionDamage += Lnum[7] / Use;
 			player.maxMinions = player.maxMinions + Perk[2];
 			if (Crescent.mod.thoriumLoaded)
@@ -121,19 +121,24 @@ namespace Crescent
 			}
 		}
 
+		private int LuckFunction(int num)
+		{
+			return (int)((Lnum[2] * (100f - num)) / (Lnum[2] + 500f)) + num;
+		}
+
 		private void ThoriumDamage()
 		{
 			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicDamage += Lnum[3] / Use;
-			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicCrit += (int)(Lnum[2] / (Use / 40));
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicCrit = LuckFunction(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicCrit);
 			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[3] / Use));
 			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantBoost += Lnum[7] / Use;
-			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantCrit += (int)(Lnum[2] / (Use / 40));
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantCrit = LuckFunction(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantCrit);
 		}
 
 		private void TremorDamage()
 		{
 			player.GetModPlayer<Tremor.MPlayer>().alchemicalDamage += Lnum[5] / Use;
-			player.GetModPlayer<Tremor.MPlayer>().alchemicalCrit += (int)(Lnum[2] / (Use / 40));
+			player.GetModPlayer<Tremor.MPlayer>().alchemicalCrit = LuckFunction(player.GetModPlayer<Tremor.MPlayer>().alchemicalCrit);
 		}
 
 		public override void PostUpdateEquips()
@@ -152,18 +157,20 @@ namespace Crescent
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			Lexp += damage;
-			CheckLifeforce(Lexp);
 			player.statMana += Perk[4];
-			if(target.boss && target.life < 0) { Lexp = Llxp; }
+
+			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
+			if (target.boss && target.life < 0) { Lexp = Llxp/10; }
+			CheckLifeforce(Lexp);
 		}
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			Lexp += damage;
-			CheckLifeforce(Lexp);
 			player.statMana += Perk[4];
-			if (target.boss && target.life < 0) { Lexp = Llxp; }
+
+			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
+			if (target.boss && target.life < 0) { Lexp = Llxp/10; }
+			CheckLifeforce(Lexp);
 		}
 
 		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

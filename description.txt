@@ -2,11 +2,15 @@ This is a UI/RPG mod.
 I made it in my spare time.
 tl;dr: Stats, skills, and perks!
 
+News: Theres now a discord for my mod!
+https://discord.gg/bkBVRKW
+
 Adds a level UI (Click the top-right box)
 In this UI, you have 7 stats, numerous perks, and skills.
 Strength (Effect: Increase melee/throwing damage)
 Agility (Effect: Increase movement speed)
 Dexterity (Effect: Increase ranged damage)
+Fortune (Effect: Increase crit chance)
 Fortitude (Effect: Increases overall defence by 1 every 10 points)
 Intelligence (Effect: Increases magic damage and maximum mana)
 Vitality (Effect: Increase maximum health)
@@ -17,14 +21,22 @@ See the ingame UI for perks/skills and their descriptions!
 
 -IN THE FUTURE (HOPEFULLY)-
 More perks/skills
-Improve the UI to fit more into Terraria's theme. (Currently it's just a placeholder
-However people seem to like it so I might just make it toggleable.)
+Improve the UI to fit more into Terraria's theme. (Currently it's just a placeholder)
+New UI textures in the works!
 Something to make this mod balanced (Open to suggestions)
-Artifact Sacrifice (Collect a large amount of an accessory to unlock a related perk)
+Artifact Sacrifice (Collect a large amount of an accessory to unlock a related perk?)
 v0.5 - Skills!+Bind a key to activate skills!
+(Spell ideas for future: Magic Spark, Blink)
 
 
 -CHANGELOG-
+v0.4.1 - Happy accidents
++Added 1 new stat: Fortune! every 25 points increases your crit chance by 1
++Added 1 new perk: "Second Wind"
++Right click the topleft now closes both windows
++Fixed Fortitude adding 1 defence... and any additional defence requiring 1000 points.
+
+
 v0.4 - UI Overhaul Pt. 1!
 +Fixed my mod REQUIRING Thorium and Tremor. I made a strong reference on accident. Sorry!
 +Major overhaul of the UI. Soon you'll be able to choose the color of the UI!

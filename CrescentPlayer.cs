@@ -5,6 +5,7 @@ using Terraria.GameInput;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Microsoft.Xna.Framework;
+using Terraria.DataStructures;
 
 namespace Crescent
 {
@@ -15,13 +16,14 @@ namespace Crescent
         public int Llvl = 0;
         public int Llxp = 0;
         public int Lstt = 0;
-        public float[] Lnum = new float[7];
+        public float[] Lnum = new float[8];
         public float Pos = 1.0f;
 		public float Pos2 = 1.0f;
 		public float Use = 1000f;
 		public int[] Perk = new int[32];
 		public int[] Skill = new int[32];
 		public int selectedSkill = 0;
+		public int secondWindTimer = 0;
 
 		public override TagCompound Save()
 		{
@@ -36,8 +38,10 @@ namespace Crescent
 				{"Lnum4", Lnum[4]},
 				{"Lnum5", Lnum[5]},
 				{"Lnum6", Lnum[6]},
+				{"Lnum7", Lnum[7]},
 				{"Perk", Perk},
-				{"Skill", Skill}
+				{"Skill", Skill},
+				{"SWTimer", secondWindTimer}
 			};
 		}
 
@@ -61,8 +65,15 @@ namespace Crescent
 			Lnum[4] = tag.GetFloat("Lnum4");
 			Lnum[5] = tag.GetFloat("Lnum5");
 			Lnum[6] = tag.GetFloat("Lnum6");
+			Lnum[7] = tag.GetFloat("Lnum7");
 			Perk = tag.GetIntArray("Perk");
 			Skill = tag.GetIntArray("Skill");
+			secondWindTimer = tag.GetInt("SWTimer");
+		}
+
+		public override void PreUpdate()
+		{
+			if (secondWindTimer > 0) secondWindTimer--;
 		}
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
@@ -87,13 +98,18 @@ namespace Crescent
 
 		public override void PreUpdateBuffs()
 		{
-			player.statLifeMax2 = (int)(player.statLifeMax * (Pos + Lnum[5] / Use));
-			player.statManaMax2 = (int)(player.statManaMax * (Pos + Lnum[4] / Use));
+			player.statLifeMax2 = (int)(player.statLifeMax * (Pos + Lnum[6] / Use));
+			player.statManaMax2 = (int)(player.statManaMax * (Pos + Lnum[5] / Use));
 			player.meleeDamage += Lnum[0] / Use;
+			player.meleeCrit += (int)(Lnum[2] / (Use / 40));
 			player.thrownDamage += Lnum[0] / Use;
-			player.rangedDamage += Lnum[2] / Use;
-			player.magicDamage += Lnum[4] / Use;
-			player.minionDamage += Lnum[6] / Use;
+			player.thrownCrit += (int)(Lnum[2] / (Use / 40));
+			player.thrownVelocity += Lnum[0] / Use;
+			player.rangedDamage += Lnum[3] / Use;
+			player.rangedCrit += (int)(Lnum[2] / (Use / 40));
+			player.magicDamage += Lnum[5] / Use;
+			player.magicCrit += (int)(Lnum[2] / (Use / 40));
+			player.minionDamage += Lnum[7] / Use;
 			player.maxMinions = player.maxMinions + Perk[2];
 			if (Crescent.mod.thoriumLoaded)
 			{
@@ -107,19 +123,22 @@ namespace Crescent
 
 		private void ThoriumDamage()
 		{
-			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicDamage += Lnum[2] / Use;
-			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[2] / Use));
-			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantBoost += Lnum[6] / Use;
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicDamage += Lnum[3] / Use;
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicCrit += (int)(Lnum[2] / (Use / 40));
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[3] / Use));
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantBoost += Lnum[7] / Use;
+			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantCrit += (int)(Lnum[2] / (Use / 40));
 		}
 
 		private void TremorDamage()
 		{
-			player.GetModPlayer<Tremor.MPlayer>().alchemicalDamage += Lnum[4] / Use;
+			player.GetModPlayer<Tremor.MPlayer>().alchemicalDamage += Lnum[5] / Use;
+			player.GetModPlayer<Tremor.MPlayer>().alchemicalCrit += (int)(Lnum[2] / (Use / 40));
 		}
 
 		public override void PostUpdateEquips()
 		{
-			player.statDefense += (int)(Pos + Lnum[3] / Use);
+			player.statDefense += (int)(Lnum[4] / (Use / 100));
 			Player.jumpHeight += Perk[3]*2;
 			//Player.jumpSpeed *= 1 + Perk[3]*0.01f;
 		}
@@ -136,6 +155,7 @@ namespace Crescent
 			Lexp += damage;
 			CheckLifeforce(Lexp);
 			player.statMana += Perk[4];
+			if(target.boss && target.life < 0) { Lexp = Llxp; }
 		}
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
@@ -143,6 +163,22 @@ namespace Crescent
 			Lexp += damage;
 			CheckLifeforce(Lexp);
 			player.statMana += Perk[4];
+			if (target.boss && target.life < 0) { Lexp = Llxp; }
+		}
+
+		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		{
+			if (secondWindTimer <= 0 && Perk[5] > 0)
+			{
+				secondWindTimer = 86400;
+				player.statLife = player.statLifeMax2/10;
+				return false;
+			}
+			else
+			{
+				secondWindTimer = 0;
+				return true;
+			}
 		}
 
 		private void CheckLifeforce(int lexp)
@@ -152,7 +188,7 @@ namespace Crescent
 				Llvl++;
 				Lexp -= Llxp;
 				Lstt += 10;
-				Llxp = (int)(Math.Pow((Llvl + 1) * 333, 1.2));
+				Llxp = (int)(Math.Pow((Llvl + 1) * 333, 1.25));
 				Main.PlaySound(2, -1, -1, 4);
 			}
 		}

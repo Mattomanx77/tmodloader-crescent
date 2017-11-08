@@ -33,6 +33,7 @@ v0.5 - Skills!+Bind a key to activate skills!
 v0.4.3 - UI Overhaul Pt. 2!
 +New textures for resource bars!
 +Optimized the code on perks
++Testing leveled enemies in expert mode
 
 v0.4.2 - Lucky tweak
 +Fortune now runs on a diminishing return curve instead of being linear.

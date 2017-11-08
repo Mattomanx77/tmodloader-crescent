@@ -27,6 +27,7 @@ namespace Crescent.UI
 		private UITransparantImage LifeFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBarFill"), Color.Red);
 		private UITransparantImage LifeGlass1 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBarGlass1"), Color.White * 0.75f);
 		private UITransparantImage LifeGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBarGlass2"), Color.White * 0.5f);
+		private UITransparantImage LifeGlassBroken = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBarGlassBroken"), Color.White * 0.25f);
 		private UIImage Mana = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ManaBar"));
 		private UIText ManaText = new UIText("0");
 		private UITransparantImage ManaFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ManaBarFill"), Color.Blue);
@@ -86,12 +87,14 @@ namespace Crescent.UI
 			Append(Life);
 			LifeFill.Top.Set(8f, 0f);
 			Life.Append(LifeFill);
-			LifeText.Top.Set(-10f, 0.5f);
-			Life.Append(LifeText);
 			LifeGlass1.Left.Set(46f, 0f); LifeGlass1.Top.Set(8f, 0f);
 			Life.Append(LifeGlass1);
 			LifeGlass2.Left.Set(46f, 0f); LifeGlass2.Top.Set(8f, 0f);
 			Life.Append(LifeGlass2);
+			LifeGlassBroken.Left.Set(46f, 0f); LifeGlassBroken.Top.Set(8f, 0f);
+			Life.Append(LifeGlassBroken);
+			LifeText.Top.Set(-10f, 0.5f);
+			Life.Append(LifeText);
 
 			//Exp
 			Exp.Top.Set(52f, 0f);
@@ -422,6 +425,16 @@ namespace Crescent.UI
 			LifeFill.Left.Set(46+(player.statLifeMax - (player.statLife / (float)player.statLifeMax2) * player.statLifeMax) * 3, 0f);
 			LifeText.SetText(player.statLife.ToString() + "/" + player.statLifeMax2.ToString());
 			LifeText.Left.Set((-LifeText.Text.Length * 3.7f), (player.statLifeMax/1000f));
+			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).secondWindTimer > 0)
+			{
+				LifeGlassBroken.ImageScale = 1f;
+				LifeGlass2.ImageScale = 0f;
+			}
+			else
+			{
+				LifeGlassBroken.ImageScale = 0f;
+				LifeGlass2.ImageScale = 1f;
+			}
 
 			Exp.Left.Set(Life.Left.Pixels + 150f < -1080 ? -1080 : Life.Left.Pixels + 150f, 1f);
 			ExpFill.Left.Set(34f - (Exp.Left.Pixels + 34f) + (Exp.Left.Pixels + 34f) * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp / (float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp), 0f);

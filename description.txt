@@ -30,6 +30,9 @@ v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4.3.1 - Bugfix :3
++Fixed boss kills setting your XP to 10%
+
 v0.4.3 - UI Overhaul Pt. 2!
 +New textures for resource bars!
 +Optimized the code on perks

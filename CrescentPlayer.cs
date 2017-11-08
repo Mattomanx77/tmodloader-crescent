@@ -163,7 +163,7 @@ namespace Crescent
 			player.statMana += Perk[4];
 
 			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
-			if (target.boss && target.life < 0) { Lexp = Llxp/10; }
+			if (target.boss && target.life < 0) { Lexp += Llxp/10; }
 			CheckLifeforce(Lexp);
 		}
 
@@ -172,7 +172,7 @@ namespace Crescent
 			player.statMana += Perk[4];
 
 			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
-			if (target.boss && target.life < 0) { Lexp = Llxp/10; }
+			if (target.boss && target.life < 0) { Lexp += Llxp/10; }
 			CheckLifeforce(Lexp);
 		}
 

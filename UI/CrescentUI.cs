@@ -14,169 +14,125 @@ namespace Crescent.UI
 {
 	public class LifeForceUI : UIState
 	{
+		public const int NUMSTATS = 8;
+		public const int NUMPERKS = 5;
+
 		public static bool visible = true;
-		public Texture2D LifePoint1 = ModLoader.GetTexture("Crescent/Assets/UI/LifeBarFilled1");
-		public Texture2D LifePoint2 = ModLoader.GetTexture("Crescent/Assets/UI/LifeBarFilled2");
-		public Texture2D LifePointSW1 = ModLoader.GetTexture("Crescent/Assets/UI/SecondWindWarning1");
-		public Texture2D LifePointSW2 = ModLoader.GetTexture("Crescent/Assets/UI/SecondWindWarning2");
-		public Texture2D ManaPoint1 = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarFilled1");
-		public Texture2D ManaPoint2 = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarFilled2");
-		public Texture2D FloralImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeFloral");
-		public Texture2D buttonHideImage = ModLoader.GetTexture("Crescent/Assets/UI/HideButton");
-		public Texture2D buttonRespecImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RespecButton");
-		public Texture2D buttonRestartImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RestartButton");
-		public UIImage PerkIncButton;
-		public string[] PerkRelevantString = new string[32];
-		public string[] PerkRelevantDescString = new string[32];
-		public string[] SkillRelevantString = new string[32];
-		public string[] SkillRelevantDescString = new string[32];
-		public Texture2D PerkIncButtonImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/PlusButton");
-		public int PerkSelected;
-		public UIImage[] PerkButton = new UIImage[32];
-		public UIImage[] SkillButton = new UIImage[32];
-		public UIText[] PerkText = new UIText[32];
-		public UIText[] SkillText = new UIText[32];
-		private LifeBar Life = new LifeBar();
-		private ManaBar Mana = new ManaBar();
-		private UIImage Exp = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ExpBar"));
-		private PerkDesc PerkDsc = new PerkDesc();
-		private ExpBarFilled ExpFill = new ExpBarFilled();
-		private UIImage[] LifePoint = new UIImage[25];
-		private UIImage[] LifePointSW = new UIImage[25];
-		private UIImage[] ManaPoint = new UIImage[25];
-		private UIImage Floral;
-		private FloralHider FlorLeft = new FloralHider();
-		private FloralHider FlorRight = new FloralHider();
+		private UIImage LevelIndicator = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LevelIndicatorCarved"));
 		private UIText Level = new UIText("0");
-		private Color Gold = new Color(255, 191, 0);
+		private UITransparantImage LevelIndicatorGlass1 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LevelIndicatorCarvedGlass1"), Color.White * 0.75f);
+		private UITransparantImage LevelIndicatorGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LevelIndicatorCarvedGlass2"), Color.White * 0.5f);
+		private UIImage Life = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBar"));
 		private UIText LifeText = new UIText("0");
+		private UITransparantImage LifeFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBarFill"), Color.Red);
+		private UITransparantImage LifeGlass1 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBarGlass1"), Color.White * 0.75f);
+		private UITransparantImage LifeGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeBarGlass2"), Color.White * 0.5f);
+		private UIImage Mana = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ManaBar"));
 		private UIText ManaText = new UIText("0");
+		private UITransparantImage ManaFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ManaBarFill"), Color.Blue);
+		private UITransparantImage ManaGlass1 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ManaBarGlass1"), Color.White * 0.75f);
+		private UITransparantImage ManaGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ManaBarGlass2"), Color.White * 0.5f);
+		private UIImage Exp = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ExpBar"));
+		private UIText ExpText = new UIText("0");
+		private UITransparantImage ExpFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ExpBarFill"), Color.Green);
+		private UITransparantImage ExpGlass1 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ExpBarGlass1"), Color.White * 0.75f);
+		private UITransparantImage ExpGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ExpBarGlass2"), Color.White * 0.5f);
+		private UIImage SettingsHide = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PlusButton"));
+		private Texture2D buttonHideImage = ModLoader.GetTexture("Crescent/Assets/UI/HideButton");
+		private Texture2D buttonRespecImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RespecButton");
+		private Texture2D buttonRestartImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RestartButton");
+		private UIImage PerkIncButton;
+		private int[] PerkCost = new int[NUMPERKS + 1];
+		private int[] PerkValue = new int[NUMPERKS + 1];
+		private bool[] PerkOne = new bool[NUMPERKS + 1];
+		private string[] PerkRelevantString = new string[NUMPERKS + 1];
+		private string[] PerkRelevantDescString = new string[NUMPERKS + 1];
+		private string[] SkillRelevantString = new string[NUMPERKS + 1];
+		private string[] SkillRelevantDescString = new string[NUMPERKS + 1];
+		private Texture2D PerkIncButtonImage = ModLoader.GetTexture("Crescent/Assets/UI/PlusButton");
+		private int PerkSelected;
+		private UIImage[] PerkButton = new UIImage[NUMPERKS + 1];
+		private UIImage[] SkillButton = new UIImage[NUMPERKS + 1];
+		private UIText[] PerkText = new UIText[NUMPERKS + 1];
+		private UIText[] SkillText = new UIText[NUMPERKS + 1];
+		private PerkDesc PerkDsc = new PerkDesc();
+		private Color Gold = new Color(255, 191, 0);
 		private StatUIBox StatUI = new StatUIBox();
 		private PerkUIBox PerkUI = new PerkUIBox();
-		public bool SkillMenuVisible;
-		public UIText SttText = new UIText("");
-		public UIText[] StatText = new UIText[10];
-		public UIImage[] StatButton = new UIImage[10];
-		public UIText PerkDscTitleText = new UIText("");
-		public UIText PerkDscText = new UIText("");
-		public int NumStats = 8;
-		public int NumPerks = 5;
+		private bool SkillMenuVisible;
+		private UIText SttText = new UIText("");
+		private UIText[] StatText = new UIText[NUMSTATS];
+		private UIImage[] StatButton = new UIImage[NUMSTATS];
+		private UIText PerkDscTitleText = new UIText("");
+		private UIText PerkDscText = new UIText("");
 		private Vector2 offset;public bool dragging = false;
 
 		public override void OnInitialize()
 		{
 			Player player = Main.player[Main.myPlayer];
 			#region TopRight
-			TopRight parent = new TopRight();
-			parent.Height.Set(93f, 0f);
-			parent.Width.Set(84f, 0f);
-			parent.Left.Set(-84f, 1f);
-			parent.Top.Set(0f, 0f);
-			parent.OnClick += new MouseEvent(TopRightClicked);
-			parent.OnRightClick += (a, b) => HideButtonClicked(2);
-			parent.backgroundColor = new Color(255, 255, 255, 255);
-
-			Level.Height.Set(0f, 0f);
-			Level.Width.Set(0f, 0f);
-			parent.Append(Level);
-
-			LifeText.Height.Set(0f, 0f);
-			LifeText.Width.Set(0f, 0f);
-			LifeText.TextColor = new Color(255, 0, 0);
-			parent.Append(LifeText);
-
-			ManaText.Height.Set(0f, 0f);
-			ManaText.Width.Set(0f, 0f);
-			ManaText.TextColor = new Color(0, 0, 255);
-			parent.Append(ManaText);
+			//Behind inventory to prevent life bar being dumb
+			UITransparantImage Button = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/LevelIndicatorCarved"), Color.White * 0f);
+			Button.Top.Set(0f, 0f); Button.Left.Set(0f, 0f);
+			Button.Width.Set(500f, 0f); Button.Height.Set(100f, 0f);
+			//Button.OnClick += new MouseEvent(TopRightClicked);
+			//Button.OnRightClick += (a, b) => HideButtonClicked(2);
+			Append(Button);
 
 			//Life
-			Life.Top.Set(0f, 0f);
-			Life.backgroundColor = new Color(255, 255, 255, 255);
-
-			//Mana
-			Mana.Top.Set(93f, 0f);
-			Mana.Left.Set(-40f, 1f);
-			Mana.backgroundColor = new Color(255, 255, 255, 255);
+			Life.Top.Set(-2f, 0f);
+			Life.OnClick += new MouseEvent(TopRightClicked);
+			Life.OnRightClick += (a, b) => HideButtonClicked(2);
+			Append(Life);
+			LifeFill.Top.Set(8f, 0f);
+			Life.Append(LifeFill);
+			LifeText.Top.Set(-10f, 0.5f);
+			Life.Append(LifeText);
+			LifeGlass1.Left.Set(46f, 0f); LifeGlass1.Top.Set(8f, 0f);
+			Life.Append(LifeGlass1);
+			LifeGlass2.Left.Set(46f, 0f); LifeGlass2.Top.Set(8f, 0f);
+			Life.Append(LifeGlass2);
 
 			//Exp
-			Exp.Top.Set(70f, 0f);
-			Exp.Left.Set(-198f, 1f);
+			Exp.Top.Set(52f, 0f);
+			Exp.OnClick += new MouseEvent(TopRightClicked);
+			Exp.OnRightClick += (a, b) => HideButtonClicked(2);
+			Append(Exp);
+			ExpFill.Top.Set(6f, 0f);
+			Exp.Append(ExpFill);
+			ExpGlass1.Left.Set(34f, 0f); ExpGlass1.Top.Set(6f, 0f);
+			Exp.Append(ExpGlass1);
+			ExpGlass2.Left.Set(34f, 0f); ExpGlass2.Top.Set(6f, 0f);
+			Exp.Append(ExpGlass2);
+			ExpText.Top.Set(-10f, 0.5f);
+			Exp.Append(ExpText);
 
-			//ExpFill
-			ExpFill.Width.Set(110f, 0f);
-			ExpFill.Height.Set(10f, 0f);
-			ExpFill.Left.Set(-191f, 1f);
-			ExpFill.Top.Set(71f, 0f);
-			ExpFill.backgroundColor = new Color(255, 255, 255, 255);
+			//Mana
+			Mana.Left.Set(-Mana.Width.Pixels + 2f, 1f);
+			Mana.OnClick += new MouseEvent(TopRightClicked);
+			Mana.OnRightClick += (a, b) => HideButtonClicked(2);
+			Append(Mana);
+			ManaFill.Left.Set(12f, 0f);
+			Mana.Append(ManaFill);
+			ManaGlass1.Left.Set(12f, 0f);
+			Mana.Append(ManaGlass1);
+			ManaGlass2.Left.Set(12f, 0f);
+			Mana.Append(ManaGlass2);
+			ManaText.Left.Set(3f, 0f);
+			Mana.Append(ManaText);
 
-			for (int i = 0; i < 25; i++)
-			{
-
-				if (i == 0)
-				{
-					LifePoint[i] = new UIImage(LifePoint1);
-					LifePoint[i].Width.Set(40f, 0f);
-					LifePointSW[i] = new UIImage(LifePointSW1);
-					LifePointSW[i].Width.Set(40f, 0f);
-					ManaPoint[i] = new UIImage(ManaPoint1);
-					ManaPoint[i].Height.Set(20f, 0f);
-					ManaPoint[i].Top.Set(0f, 0f);
-				}
-				else
-				{
-					LifePoint[i] = new UIImage(LifePoint2);
-					LifePoint[i].Width.Set(71f, 0f);
-					LifePointSW[i] = new UIImage(LifePointSW2);
-					LifePointSW[i].Width.Set(71f, 0f);
-					ManaPoint[i] = new UIImage(ManaPoint2);
-					ManaPoint[i].Height.Set(39f, 0f);
-					ManaPoint[i].Top.Set(-19 + i * 20, 0f);
-				}
-				LifePoint[i].Height.Set(40f, 0f);
-				LifePoint[i].Left.Set(-(i + 1) * 40, 1f);
-				LifePoint[i].Top.Set(4f, 0f);
-				Life.Append(LifePoint[i]);
-				LifePointSW[i].Height.Set(40f, 0f);
-				LifePointSW[i].Left.Set(-(i + 1) * 40, 1f);
-				LifePointSW[i].Top.Set(4f, 0f);
-				Life.Append(LifePointSW[i]);
-				ManaPoint[i].Width.Set(20f, 0f);
-				ManaPoint[i].Left.Set(16, 0f);
-				Mana.Append(ManaPoint[i]);
-			}
-
-			//Floral
-			Floral = new UIImage(FloralImage);
-			Floral.Width.Set(750f, 0f);
-			Floral.Height.Set(23f, 0f);
-			Floral.Left.Set(76f, 0f);
-			Floral.Top.Set(46f, 0f);
-			Floral.ImageScale = 1f;
-			Life.Append(Floral);
-
-			FlorLeft.Width.Set(350f, 0f);
-			FlorLeft.Height.Set(23f, 0f);
-			FlorLeft.Left.Set(73f, 0f);
-			FlorLeft.Top.Set(46f, 0f);
-			FlorLeft.backgroundColor = new Color(255, 255, 255, 255);
-
-			FlorRight.Width.Set(320f, 0f);
-			FlorRight.Height.Set(23f, 0f);
-			FlorRight.Left.Set(479f, 0f);
-			FlorRight.Top.Set(46f, 0f);
-			FlorRight.backgroundColor = new Color(255, 255, 255, 255);
-
-			base.Append(parent);
-			base.Append(Life);
-			base.Append(Mana);
-			base.Append(Exp);
-			base.Append(ExpFill);
-			base.Append(FlorLeft);
-			base.Append(FlorRight);
+			//Indicator has to go last to be on top
+			LevelIndicator.Left.Set(-LevelIndicator.Width.Pixels+2f, 1f);
+			LevelIndicator.Top.Set(-30f, 0f);
+			LevelIndicator.OnClick += new MouseEvent(TopRightClicked);
+			LevelIndicator.OnRightClick += (a, b) => HideButtonClicked(2);
+			Append(LevelIndicator);
+			LevelIndicator.Append(Level);
+			LevelIndicator.Append(LevelIndicatorGlass1);
+			LevelIndicator.Append(LevelIndicatorGlass2);
 			#endregion
 			#region StatUI
-			StatUI.Height.Set(NumStats*48 + 81f, 0f);
+			StatUI.Height.Set(NUMSTATS*48 + 81f, 0f);
 			StatUI.Width.Set(104f, 0f);
 			StatUI.Left.Set(-363f, 0.5f);
 			StatUI.Top.Set(80f, 0f);
@@ -211,7 +167,7 @@ namespace Crescent.UI
 			StatButton[6] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/VitalityButton"));
 			StatButton[7] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RadianceButton"));
 
-			for (int i = 0; i < NumStats; i++)
+			for (int i = 0; i < NUMSTATS; i++)
 			{
 				int n = i;
 				StatButton[i].Left.Set(1f, 0f); StatButton[i].Top.Set(i*48 + 24f, 0f);
@@ -225,7 +181,7 @@ namespace Crescent.UI
 			}
 
 			SttText.Left.Set(17f, 0f);
-			SttText.Top.Set(NumStats * 48 + 54f, 0f);
+			SttText.Top.Set(NUMSTATS * 48 + 54f, 0f);
 			StatUI.Append(SttText);
 			#endregion
 			#region PerkUI
@@ -246,7 +202,6 @@ namespace Crescent.UI
 			PerkUI.Append(PerkDsc);
 
 			PerkIncButton = new UIImage(PerkIncButtonImage);
-			PerkIncButton.Width.Set(15f, 0f); PerkIncButton.Height.Set(15f, 0f);
 			PerkIncButton.OnClick += (a, b) => PerkIncButtonClicked(true);
 			PerkIncButton.OnRightClick += (a, b) => PerkIncButtonClicked(false);
 			PerkUI.Append(PerkIncButton);
@@ -255,8 +210,8 @@ namespace Crescent.UI
 			PerkRelevantString[1] = "Wing Muscle";
 			PerkRelevantString[2] = "Overlord";
 			PerkRelevantString[3] = "Jumpman";
-			PerkRelevantString[4] = "Reaper of Stars";
-			PerkRelevantString[5] = "Second Wind";
+			PerkRelevantString[4] = "Reaper of Stars";PerkOne[4] = false;
+			PerkRelevantString[5] = "Second Wind";PerkOne[5] = true;
 			//Buttons
 			PerkButton[1] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_WingMuscle"));
 			PerkButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Overlord"));
@@ -264,11 +219,11 @@ namespace Crescent.UI
 			PerkButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_ReaperofStars"));
 			PerkButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_SecondWind"));
 
-			for (int i = 1; i <= NumPerks; i++)
+			for (int i = 1; i <= NUMPERKS; i++)
 			{
 				int n = i;
 				PerkButton[i].Width.Set(23f, 0f); PerkButton[i].Height.Set(23f, 0f);
-				PerkButton[i].Left.Set((2*(i-(0.5f+NumPerks/2F))*23)+257-12f, 0f);PerkButton[i].Top.Set(193-12f, 0f);
+				PerkButton[i].Left.Set((2*(i-(0.5f+NUMPERKS/2F))*23)+257-12f, 0f);PerkButton[i].Top.Set(193-12f, 0f);
 				PerkButton[i].OnClick += (a, b) => PerkButtonClicked(n);
 				PerkButton[i].OnRightClick += (a, b) => PerkDescClose();
 				PerkUI.Append(PerkButton[i]);
@@ -302,116 +257,56 @@ namespace Crescent.UI
 		private void PerkIncButtonClicked(bool LeftClick)
 		{
 			Player player = Main.player[Main.myPlayer];
+
 			if (LeftClick)
 			{
-				switch (PerkSelected)
+				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= PerkCost[PerkSelected] && (PerkOne[PerkSelected] ? player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[PerkSelected] == 0 : true))
 				{
-					case 1:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]))
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]);
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]++;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 2:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])))
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]));
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]++;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 3:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]))
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]++;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 4:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]))
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]);
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]++;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 5:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt >= 100 && player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5] == 0)
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= 100;
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5]++;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
+					player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt -= PerkCost[PerkSelected];
+					player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[PerkSelected]++;
 				}
 			}
 			else
 			{
-				switch (PerkSelected)
+				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[PerkSelected] > 0)
 				{
-					case 1:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1] >= 1)
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 50 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1];
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]--;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 2:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2] >= 1)
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2] - 1));
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]--;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 3:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3] >= 1)
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 25 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3];
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]--;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 4:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4] >= 1)
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 50 * player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4];
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]--;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
-					case 5:
-						if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5] >= 1)
-						{
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += 100;
-							player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5]--;
-						}
-						Main.PlaySound(SoundID.MenuTick);
-						break;
+					player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt += PerkValue[PerkSelected];
+					player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[PerkSelected]--;
 				}
 			}
-			//Descriptions
-			PerkRelevantDescString[1] = "Each point into this perk\ngives +20% flight\nCosts " + 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]) + " points to upgrade";
-			PerkRelevantDescString[2] = "Each point into this perk\ngives +1 maximum minions\nCosts " + (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])) + " points to upgrade";
-			PerkRelevantDescString[3] = "Each point into this perk\nboosts your jump 1 block\nCosts " + 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]) + " points to upgrade";
-			PerkRelevantDescString[4] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]) + " points to upgrade";
-			PerkRelevantDescString[5] = "Survive a fatal blow with\n10% of your life\nCosts 100 points to obtain";
+
+			Main.PlaySound(SoundID.MenuTick);
+			PerkCostUpdate(player);
+			//PerkDescClose();
 			PerkDscText.SetText(PerkRelevantDescString[PerkSelected]);
+		}
+
+		private void PerkCostUpdate(Player player)
+		{
+			PerkCost[1] = 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]);
+			PerkCost[2] = (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]));
+			PerkCost[3] = 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
+			PerkCost[4] = 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]);
+			PerkCost[5] = 100;
+
+			PerkValue[1] = 50 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]);
+			PerkValue[2] = (int)Math.Pow(10, 1 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]));
+			PerkValue[3] = 25 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
+			PerkValue[4] = 50 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]);
+			PerkValue[5] = 100;
+
+			PerkRelevantDescString[1] = "Each point into this perk\ngives +20% flight\nCosts " + PerkCost[1] + " points to upgrade";
+			PerkRelevantDescString[2] = "Each point into this perk\ngives +1 maximum minions\nCosts " + PerkCost[2] + " points to upgrade";
+			PerkRelevantDescString[3] = "Each point into this perk\nboosts your jump 1 block\nCosts " + PerkCost[3] + " points to upgrade";
+			PerkRelevantDescString[4] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + PerkCost[4] + " points to upgrade";
+			PerkRelevantDescString[5] = "Survive a fatal blow with\n10% of your life\nCosts 100 points to obtain";
 		}
 
 		private void PerkButtonClicked(int value)
 		{
 			Player player = Main.player[Main.myPlayer];
+			PerkCostUpdate(player);
 			//Descriptions
-			PerkRelevantDescString[1] = "Each point into this perk\ngives +20% flight\nCosts " + 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]) + " points to upgrade";
-			PerkRelevantDescString[2] = "Each point into this perk\ngives +1 maximum minions\nCosts " + (int)Math.Pow(10, 2 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2])) + " points to upgrade";
-			PerkRelevantDescString[3] = "Each point into this perk\nboosts your jump 1 block\nCosts " + 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]) + " points to upgrade";
-			PerkRelevantDescString[4] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[4]) + " points to upgrade";
-			PerkRelevantDescString[5] = "Survive a fatal blow with\n10% of your life\nCosts 100 points to obtain";
 			PerkDsc.Remove();
 			PerkIncButton.Remove();
 			PerkUI.Append(PerkDsc);
@@ -419,7 +314,7 @@ namespace Crescent.UI
 			PerkDsc.Left.Set(PerkButton[value].Left.Pixels - PerkDsc.Width.Pixels / 2 + 12f, 0f);
 			PerkDsc.Top.Set(PerkButton[value].Top.Pixels + 23f, 0f);
 			PerkIncButton.Left.Set(PerkButton[value].Left.Pixels + 23f, 0f);
-			PerkIncButton.Top.Set(PerkButton[value].Top.Pixels + 4f, 0f);
+			PerkIncButton.Top.Set(PerkButton[value].Top.Pixels + 3f, 0f);
 			PerkDscTitleText.Left.Set(73.5f, 0f);
 			PerkDscText.Left.Set(25f, 0f); PerkDscText.Top.Set(25f, 0f);
 			PerkDscTitleText.SetText(PerkRelevantString[value]);
@@ -430,7 +325,7 @@ namespace Crescent.UI
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
-		private void PerkDescClose()
+		public void PerkDescClose()
 		{
 			if (PerkUI.HasChild(PerkDsc))
 			{
@@ -441,7 +336,7 @@ namespace Crescent.UI
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
-		private void HideButtonClicked(int num)
+		public void HideButtonClicked(int num)
 		{
 			switch (num)
 			{
@@ -477,7 +372,7 @@ namespace Crescent.UI
 		private void RespecButtonClicked(UIMouseEvent evt, UIElement listeningElement)
 		{
 			Player player = Main.player[Main.myPlayer];
-			for (int i = 0; i < NumStats; i++)
+			for (int i = 0; i < NUMSTATS; i++)
 			{
 				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[i] = 0;
 			}
@@ -493,7 +388,7 @@ namespace Crescent.UI
 		{
 			Player player = Main.player[Main.myPlayer];
 			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl = 0;
-			for (int i = 0; i < NumStats; i++)
+			for (int i = 0; i < NUMSTATS; i++)
 			{
 				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[i] = 0;
 			}
@@ -516,25 +411,30 @@ namespace Crescent.UI
 		public override void Update(GameTime gameTime)
 		{
 			Player player = Main.player[Main.myPlayer];
-			float LifeBarWidth = player.statLifeMax * 2 + 24f;
-			float ManaBarHeight = player.statManaMax * 2 + 20f;
-			int ExpBarFillWidth = (int)(((float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp / player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp) * 100) + 10;
-			float MaxLife;
-			float MaxLife2;
-			if (player.statLifeMax <= 400)
-			{
-				MaxLife = player.statLifeMax;
-				MaxLife2 = player.statLifeMax2;
-			}
-			else
-			{
-				MaxLife = 400;
-				MaxLife2 = player.statLifeMax2;
-			}
+
+			//Topright
+			Level.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl.ToString());
+			Level.Left.Set(-Level.Text.Length * 3.7f, 0.5f); Level.Top.Set(-10f, 0.5f);
+			Level.TextColor = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt > 0 ? Gold : Color.White;
+
+			//Resource bars
+			Life.Left.Set(-84-46-player.statLifeMax * (Main.screenWidth >= 1626 ? 3 : (Main.screenWidth >= 1376 ? 2.5f : (Main.screenWidth >= 1126 ? 2 : 1.5f))), 1f);
+			LifeFill.Left.Set(46+(player.statLifeMax - (player.statLife / (float)player.statLifeMax2) * player.statLifeMax) * 3, 0f);
+			LifeText.SetText(player.statLife.ToString() + "/" + player.statLifeMax2.ToString());
+			LifeText.Left.Set((-LifeText.Text.Length * 3.7f), (player.statLifeMax/1000f));
+
+			Exp.Left.Set(Life.Left.Pixels + 150f < -1080 ? -1080 : Life.Left.Pixels + 150f, 1f);
+			ExpFill.Left.Set(34f - (Exp.Left.Pixels + 34f) + (Exp.Left.Pixels + 34f) * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp / (float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp), 0f);
+			ExpText.SetText((Math.Floor(10000*(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp/(float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp))/100).ToString() + "%");
+			ExpText.Left.Set((-LifeText.Text.Length * 3.7f), (player.statLifeMax / 1000f));
+
+			Mana.Top.Set(50-800+player.statManaMax * (Main.screenHeight >= 888 ? 4 : (Main.screenHeight >= 688 ? 3 : 2)), 0f);
+			ManaFill.Top.Set((-player.statManaMax+(player.statMana / (float)player.statManaMax2)*player.statManaMax)*4, 0f);
+			ManaText.SetText(player.statMana.ToString() + "\n/" + player.statManaMax2.ToString());
+			ManaText.Top.Set((Mana.Height.Pixels*(1 + Mana.Top.Pixels/-850))/2f, 0f);
 
 			//Status bars
-			for (int i = 0; i < NumStats; i++)
-			{
+			for (int i = 0; i < NUMSTATS; i++){
 				StatText[i].SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[i].ToString());
 			}
 			SttText.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt.ToString());
@@ -544,74 +444,11 @@ namespace Crescent.UI
 				StatUI.Left.Set(Main.mouseX - offset.X, 0.5f);
 				StatUI.Top.Set(Main.mouseY - offset.Y, 0f);
 			}
-			for (int i = 1; i <= NumPerks; i++){
+
+			//Perk window
+			for (int i = 1; i <= NUMPERKS; i++){
 				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] > 0) { PerkText[i].SetText("(" + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i].ToString() + ")"); }
 				else { PerkText[i].SetText(""); }
-			}
-
-			if (LifeBarWidth > 824) { LifeBarWidth = 824; }
-			Life.Width.Set(LifeBarWidth, 0f);
-			Life.Left.Set(-(84 + LifeBarWidth), 1f);
-			FlorLeft.Left.Set(Life.Left.Pixels + 73f, 1f);
-
-			Mana.Height.Set(ManaBarHeight, 0f);
-
-			ExpFill.Width.Set(ExpBarFillWidth, 0f);
-			ExpFill.Left.Set(-81 - ExpBarFillWidth, 1f);
-
-			for (int i = 0; i < 25; i++)
-			{
-				float Alpha = (player.statLife - ((MaxLife2 / (MaxLife / 20f)) * i)) / (MaxLife2 / (MaxLife / 20f));
-				if (Alpha > 1) { Alpha = 1; }
-				if (Alpha < 0) { Alpha = 0; }
-				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).secondWindTimer <= 0)
-				{
-					LifePoint[i].ImageScale = Alpha;
-					LifePointSW[i].ImageScale = 0;
-				}
-				else
-				{
-					LifePoint[i].ImageScale = 0;
-					LifePointSW[i].ImageScale = Alpha;
-				}
-
-				Alpha = (player.statMana - ((player.statManaMax2 / (player.statManaMax / 10f)) * i)) / (player.statManaMax2 / (player.statManaMax / 10f));
-				if (Alpha > 1) { Alpha = 1; }
-				if (Alpha < 0) { Alpha = 0; }
-				ManaPoint[i].ImageScale = Alpha;
-			}
-			if (player.statLifeMax >= 400)
-			{
-				Floral.ImageScale = 1f;
-				FlorLeft.Width.Set(350f - (((player.statLifeMax - 400) / 5) * 16), 0f);
-				FlorRight.Width.Set(320f - (((player.statLifeMax - 400) / 5) * 16), 0f);
-				FlorRight.Left.Set(Life.Left.Pixels + 479f + (((player.statLifeMax - 400) / 5) * 16), 1f);
-			}
-			else
-			{
-				Floral.ImageScale = 0f;
-				FlorLeft.Width.Set(0f, 0f);
-				FlorRight.Width.Set(0f, 0f);
-			}
-
-			Level.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl.ToString());
-			LifeText.SetText(player.statLife.ToString());
-			ManaText.SetText(player.statMana.ToString());
-
-			Level.Left.Set(-Level.Text.Length * 3.7f, 0.5f);
-			Level.Top.Set(-18f, 0.33f);
-			LifeText.Left.Set(-LifeText.Text.Length * 3.7f, 0.5f);
-			LifeText.Top.Set(-2f, 0.33f);
-			ManaText.Left.Set(-ManaText.Text.Length * 3.7f, 0.5f);
-			ManaText.Top.Set(14f, 0.33f);
-
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt > 0)
-			{
-				Level.TextColor = Gold;
-			}
-			else
-			{
-				Level.TextColor = Color.White;
 			}
 
 			DrawInterface_Resources_Buffs();
@@ -821,107 +658,35 @@ namespace Crescent.UI
 		}
 		#endregion
 		#region CustomUIClasses
-		class TopRight : UIElement
-		{
-			public Color backgroundColor = Color.Gray;
-			private static Texture2D _backgroundTexture;
 
-			public TopRight()
+		public class UITransparantImage : UIElement
+		{
+			private Texture2D _texture;
+			public float ImageScale = 1f;
+			private Color color;
+
+			public UITransparantImage(Texture2D texture, Color color)
 			{
-				if (_backgroundTexture == null)
-					_backgroundTexture = ModLoader.GetTexture("Crescent/Assets/UI/TopRight");
+				_texture = texture;
+				Width.Set(_texture.Width, 0f);
+				Height.Set(_texture.Height, 0f);
+				this.color = color;
+			}
+
+			public void SetImage(Texture2D texture)
+			{
+				_texture = texture;
+				Width.Set(_texture.Width, 0f);
+				Height.Set(_texture.Height, 0f);
 			}
 
 			protected override void DrawSelf(SpriteBatch spriteBatch)
 			{
 				CalculatedStyle dimensions = GetDimensions();
-				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
-				int width = (int)Math.Ceiling(dimensions.Width);
-				int height = (int)Math.Ceiling(dimensions.Height);
-				spriteBatch.Draw(_backgroundTexture, new Rectangle(point1.X, point1.Y, width, height), backgroundColor);
+				spriteBatch.Draw(_texture, dimensions.Position() + _texture.Size() * (1f - ImageScale) / 2f, null, color, 0f, Vector2.Zero, ImageScale, SpriteEffects.None, 0f);
 			}
 		}
-
-		class LifeBar : UIElement
-		{
-			public Color backgroundColor = Color.Gray;
-			private static Texture2D Bar;
-			private static Texture2D End;
-
-			public LifeBar()
-			{
-				if (Bar == null)
-					Bar = ModLoader.GetTexture("Crescent/Assets/UI/LifeBarMid");
-				if (End == null)
-					End = ModLoader.GetTexture("Crescent/Assets/UI/LifeBarEnd");
-			}
-
-			protected override void DrawSelf(SpriteBatch spriteBatch)
-			{
-				CalculatedStyle dimensions = GetDimensions();
-				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
-				int width = (int)Math.Ceiling(dimensions.Width);
-				int height = (int)Math.Ceiling(dimensions.Height);
-				spriteBatch.Draw(Bar, new Rectangle(point1.X + 125, point1.Y, width - 125, 70), backgroundColor);
-				spriteBatch.Draw(End, new Rectangle(point1.X, point1.Y, 125, 70), backgroundColor);
-			}
-		}
-
-		class ManaBar : UIElement
-		{
-			public Color backgroundColor = Color.Gray;
-			private static Texture2D Bar;
-			private static Texture2D End;
-			private static Texture2D Spc;
-
-			public ManaBar()
-			{
-				if (Bar == null)
-					Bar = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarMid");
-				if (End == null)
-					End = ModLoader.GetTexture("Crescent/Assets/UI/ManaBarEnd");
-			}
-
-			protected override void DrawSelf(SpriteBatch spriteBatch)
-			{
-				CalculatedStyle dimensions = GetDimensions();
-				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
-				int height = (int)Math.Ceiling(dimensions.Height);
-				
-				spriteBatch.Draw(Bar, new Rectangle(point1.X, point1.Y, 40, height - 43), backgroundColor);
-				spriteBatch.Draw(End, new Rectangle(point1.X, point1.Y + height - 43, 40, 43), backgroundColor);
-			}
-		}
-
-		class ExpBarFilled : UIElement
-		{
-			public Color backgroundColor = Color.Gray;
-			private static Texture2D Stt;
-			private static Texture2D Bar;
-			private static Texture2D End;
-
-			public ExpBarFilled()
-			{
-				if (Stt == null)
-					Stt = ModLoader.GetTexture("Crescent/Assets/UI/ExpBarFilledStart");
-				if (Bar == null)
-					Bar = ModLoader.GetTexture("Crescent/Assets/UI/ExpBarFilledMid");
-				if (End == null)
-					End = ModLoader.GetTexture("Crescent/Assets/UI/ExpBarFilledEnd");
-			}
-
-			protected override void DrawSelf(SpriteBatch spriteBatch)
-			{
-				CalculatedStyle dimensions = GetDimensions();
-				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
-				int width = (int)Math.Ceiling(dimensions.Width);
-				int height = (int)Math.Ceiling(dimensions.Height);
-				spriteBatch.Draw(Stt, new Rectangle(point1.X + width - 1, point1.Y, 1, 10), backgroundColor);
-				spriteBatch.Draw(Bar, new Rectangle(point1.X + 9, point1.Y, width - 10, 10), backgroundColor);
-				spriteBatch.Draw(End, new Rectangle(point1.X, point1.Y, 9, 9), backgroundColor);
-			}
-		}
-
+		
 		class PerkDesc : UIElement
 		{
 			public Color backgroundColor = Color.Gray;
@@ -951,27 +716,6 @@ namespace Crescent.UI
 				spriteBatch.Draw(White, new Rectangle(point1.X, point1.Y + 1, 2, height - 2), backgroundColor);
 				spriteBatch.Draw(Dark, new Rectangle(point1.X + 1, point1.Y + height - 2, width - 2, 2), backgroundColor);
 				spriteBatch.Draw(Dark, new Rectangle(point1.X + width - 2, point1.Y + 1, 2, height - 2), backgroundColor);
-			}
-		}
-
-		class FloralHider : UIElement
-		{
-			public Color backgroundColor = Color.Gray;
-			private static Texture2D FloralBar;
-
-			public FloralHider()
-			{
-				if (FloralBar == null)
-					FloralBar = ModLoader.GetTexture("Crescent/Assets/UI/LifeFloralHider");
-			}
-
-			protected override void DrawSelf(SpriteBatch spriteBatch)
-			{
-				CalculatedStyle dimensions = GetDimensions();
-				Point point1 = new Point((int)dimensions.X, (int)dimensions.Y);
-				int width = (int)Math.Ceiling(dimensions.Width);
-				int height = (int)Math.Ceiling(dimensions.Height);
-				spriteBatch.Draw(FloralBar, new Rectangle(point1.X, point1.Y, width, height), backgroundColor);
 			}
 		}
 

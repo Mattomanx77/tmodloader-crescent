@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Microsoft.Xna.Framework;
 using Terraria.DataStructures;
+using Crescent.UI;
 
 namespace Crescent
 {
@@ -49,14 +50,14 @@ namespace Crescent
 		{
 			Lnum = new float[16];
 			Perk = new int[32];
-			Llxp = (int)(Math.Pow((Llvl + 1) * 333, 1.2));
+			Llxp = (int)(Math.Pow((Llvl + 1) * 333, 1.25));
 		}
 
 		public override void Load(TagCompound tag)
 		{
 			Lexp = tag.GetInt("Lexp");
 			Llvl = tag.GetInt("Llvl");
-			Llxp = (int)(Math.Pow((Llvl + 1) * 333, 1.2));
+			Llxp = (int)(Math.Pow((Llvl + 1) * 333, 1.25));
 			Lstt = tag.GetInt("Lstt");
 			Lnum[0] = tag.GetFloat("Lnum0");
 			Lnum[1] = tag.GetFloat("Lnum1");
@@ -69,6 +70,8 @@ namespace Crescent
 			Perk = tag.GetIntArray("Perk");
 			Skill = tag.GetIntArray("Skill");
 			secondWindTimer = tag.GetInt("SWTimer");
+			Crescent.mod.LifeForceUI.HideButtonClicked(2);
+			Crescent.mod.LifeForceUI.PerkDescClose();
 		}
 
 		public override void PreUpdate()
@@ -144,7 +147,7 @@ namespace Crescent
 		public override void PostUpdateEquips()
 		{
 			player.statDefense += (int)(Lnum[4] / (Use / 100));
-			Player.jumpHeight += Perk[3]*2;
+			Player.jumpHeight += Perk[3]*4;
 			//Player.jumpSpeed *= 1 + Perk[3]*0.01f;
 		}
 

@@ -12,6 +12,7 @@ namespace Crescent
 		private UserInterface LifeForceInterface;
 		internal LifeForceUI LifeForceUI;
 		public static ModHotKey keySkill;
+		public bool UIOpen;
 		public bool thoriumLoaded;
 		public bool tremorLoaded;
 

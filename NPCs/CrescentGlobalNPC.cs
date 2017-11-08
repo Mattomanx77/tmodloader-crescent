@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -8,6 +9,16 @@ namespace Crescent.NPCs
 {
 	public class CrescentGlobalNPC : GlobalNPC
 	{
+		public static Random rng = new Random();
+		public override void ScaleExpertStats(NPC npc, int numPlayers, float bossLifeScale)
+		{
+			int n = rng.Next(Main.hardMode ? 4 : 0, Main.hardMode ? (Main.dayTime ? 50 : 125) : (Main.dayTime ? 10 : 25));
+			npc.GivenName = ("Lv. " + (1 + n) + " " + npc.TypeName);
+			npc.lifeMax = (int)(npc.lifeMax * (1 + (n * 0.05)));
+			npc.defense = (int)(npc.defense * (1 + (n * 0.05)));
+			npc.damage = (int)(npc.damage * (1 + (n * 0.05)));
+		}
+
 		public override bool PreNPCLoot(NPC npc)
 		{
 			if (npc.lastInteraction == npc.FindClosestPlayer())

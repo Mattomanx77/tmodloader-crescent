@@ -94,7 +94,7 @@ namespace Crescent.UI
 			LifeGlassBroken.Left.Set(46f, 0f); LifeGlassBroken.Top.Set(8f, 0f);
 			Life.Append(LifeGlassBroken);
 			LifeText.Top.Set(-10f, 0.5f);
-			Life.Append(LifeText);
+			Life.Append(LifeText);	
 
 			//Exp
 			Exp.Top.Set(52f, 0f);

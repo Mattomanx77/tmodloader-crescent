@@ -30,6 +30,14 @@ v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4.4 - UI Overhaul Pt. 3
++Added settings menu! Open it using a button assigned in controls!
++Change the color of your resource bars!
++Use a vanilla-themed UI instead! (WIP)
++New Icon!
++Fixed bug where the XP bar filled incorrectly
++Tweaked the cost of Overlord
+
 v0.4.3.1 - Bugfix :3
 +Fixed boss kills setting your XP to 10%
 

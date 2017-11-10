@@ -70,8 +70,6 @@ namespace Crescent
 			Perk = tag.GetIntArray("Perk");
 			Skill = tag.GetIntArray("Skill");
 			secondWindTimer = tag.GetInt("SWTimer");
-			Crescent.mod.LifeForceUI.HideButtonClicked(2);
-			Crescent.mod.LifeForceUI.PerkDescClose();
 		}
 
 		public override void PreUpdate()
@@ -81,6 +79,11 @@ namespace Crescent
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
+			if (Crescent.keyConfig.JustPressed)
+			{
+				Crescent.mod.SettingsUI.SettingsToggle(true);
+			}
+
 			if (Crescent.keySkill.JustPressed)
 			{
 				switch (selectedSkill)
@@ -113,7 +116,7 @@ namespace Crescent
 			player.magicDamage += Lnum[5] / Use;
 			player.magicCrit = LuckFunction(player.magicCrit);
 			player.minionDamage += Lnum[7] / Use;
-			player.maxMinions = player.maxMinions + Perk[2];
+			player.maxMinions = player.maxMinions + Perk[1];
 			if (Crescent.mod.thoriumLoaded)
 			{
 				ThoriumDamage();
@@ -147,20 +150,20 @@ namespace Crescent
 		public override void PostUpdateEquips()
 		{
 			player.statDefense += (int)(Lnum[4] / (Use / 100));
-			Player.jumpHeight += Perk[3]*4;
-			//Player.jumpSpeed *= 1 + Perk[3]*0.01f;
+			Player.jumpHeight += Perk[2]*4;
+			//Player.jumpSpeed *= 1 + Perk[2]*0.01f;
 		}
 
 		public override void PostUpdateRunSpeeds()
 		{
 			player.runAcceleration = player.runAcceleration * (Pos2 + Lnum[1] / Use*2);
 			player.maxRunSpeed = player.maxRunSpeed * (Pos2 + Lnum[1] / Use*2);
-			player.wingTimeMax = (int)(player.wingTimeMax * (1+Perk[1]/ 5F));
+			player.wingTimeMax = (int)(player.wingTimeMax * (1+Perk[0]/ 5F));
 		}
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			player.statMana += Perk[4];
+			player.statMana += Perk[3];
 
 			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
 			if (target.boss && target.life < 0) { Lexp += Llxp/10; }
@@ -169,7 +172,7 @@ namespace Crescent
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			player.statMana += Perk[4];
+			player.statMana += Perk[3];
 
 			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
 			if (target.boss && target.life < 0) { Lexp += Llxp/10; }
@@ -178,7 +181,7 @@ namespace Crescent
 
 		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
-			if (secondWindTimer <= 0 && Perk[5] > 0)
+			if (secondWindTimer <= 0 && Perk[4] > 0)
 			{
 				secondWindTimer = 86400;
 				player.statLife = player.statLifeMax2/10;

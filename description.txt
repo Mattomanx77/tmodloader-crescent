@@ -17,7 +17,7 @@ Vitality (Effect: Increase maximum health)
 Radiance (Effect: Increases summoner damage)
 See the ingame UI for perks/skills and their descriptions!
 
-
+Thanks to gateboy6 for pointing out bugs and things that I missed repeatedly
 
 -IN THE FUTURE (HOPEFULLY)-
 More perks/skills
@@ -30,6 +30,13 @@ v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4.4.1 - Small tweak
++Changed how enemies scale defence
++Enemy scaling is now less harsh in Hardmode,
+But Post-Plantera brings it back to how it was.
++Added icons for Fortune/Dexterity
+=Changed the symbols font to Georgia.
+
 v0.4.4 - UI Overhaul Pt. 3
 +Added settings menu! Open it using a button assigned in controls!
 +Change the color of your resource bars!

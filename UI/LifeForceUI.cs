@@ -760,7 +760,7 @@ namespace Crescent.UI
 				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 100, point1.Y + 4, 3, height - 45), new Color(0, 0, 0, 63));
 				spriteBatch.Draw(StaticCorner, new Rectangle(point1.X + 100, point1.Y + 1, 3, 3), backgroundColor);
 				spriteBatch.Draw(StaticCorner, new Rectangle(point1.X + 1, point1.Y + height - 44, 3, 3), backgroundColor);
-				spriteBatch.Draw(StatsText, new Rectangle(point1.X + 3, point1.Y + 5, 59, 19), backgroundColor);
+				spriteBatch.Draw(StatsText, new Rectangle(point1.X + 3, point1.Y + 3, 53, 21), backgroundColor);
 				spriteBatch.Draw(StatsBottom, new Rectangle(point1.X + 3, point1.Y + height - 57, 44, 3), backgroundColor);
 
 				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 11, point1.Y + height - 38, 82, 38), backgroundColor);

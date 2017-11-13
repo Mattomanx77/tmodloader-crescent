@@ -14,7 +14,7 @@ namespace Crescent.UI
 {
 	public class SettingsUI : UIState
 	{
-		private UIPanel Settings = new UIPanel();
+		public UIPanel Settings = new UIPanel();
 		private UIPanel SelectedTheme = new UIPanel() { BackgroundColor = Color.Yellow * 0.5f };
 		private UIPanel ThemeSelectVanilla = new UIPanel();
 		private UIImage ThemeSelectCrescent = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ThemeIcon"));
@@ -24,6 +24,8 @@ namespace Crescent.UI
 		private UIText[] SettingsBarLabel = new UIText[3];
 		private UIText[,] SettingsBarColorText = new UIText[3, 3];
 		private UIText[,,] SettingsBarColorMod = new UIText[3, 3, 2];
+		private UIText[] SettingsBoolsText = new UIText[2];
+		private UIPanel[] SettingsBoolsPanel = new UIPanel[2];
 
 		public override void OnInitialize()
 		{
@@ -78,6 +80,27 @@ namespace Crescent.UI
 				}
 			}
 
+			SettingsBoolsText[0] = new UIText("Half-Sized Healthbar:");
+			SettingsBoolsText[0].Top.Set(SettingsBarColorPanel[0].Height.Pixels / 2 - SettingsBoolsText[0].MinHeight.Pixels / 2 + (3 * 30f) + 24, 0f);
+			SettingsBoolsText[0].Left.Set(-SettingsBoolsText[0].MinWidth.Pixels / 2, 1 / 3f);
+			SettingsInnerPanel.Append(SettingsBoolsText[0]);
+			SettingsBoolsPanel[0] = new UIPanel() { BackgroundColor = Config.HalfsizeHealthbar ? Color.White : Color.Black };
+			SettingsBoolsPanel[0].Width.Set(25f, 0f); SettingsBoolsPanel[0].Height.Set(25f, 0f);
+			SettingsBoolsPanel[0].Top.Set((3 * 30f) + 24, 0f);
+			SettingsBoolsPanel[0].Left.Set(-SettingsBoolsPanel[0].Width.Pixels / 2, 2 / 3f);
+			SettingsBoolsPanel[0].OnClick += (a, b) => BoolPress(0);
+			SettingsInnerPanel.Append(SettingsBoolsPanel[0]);
+			SettingsBoolsText[1] = new UIText("Expert Enemy Leveling:");
+			SettingsBoolsText[1].Top.Set(SettingsBarColorPanel[1].Height.Pixels / 2 - SettingsBoolsText[1].MinHeight.Pixels / 2 + (4 * 30f) + 24, 0f);
+			SettingsBoolsText[1].Left.Set(-SettingsBoolsText[1].MinWidth.Pixels / 2, 1 / 3f);
+			SettingsInnerPanel.Append(SettingsBoolsText[1]);
+			SettingsBoolsPanel[1] = new UIPanel() { BackgroundColor = Config.MonsterLeveling ? Color.White : Color.Black };
+			SettingsBoolsPanel[1].Width.Set(25f, 0f); SettingsBoolsPanel[1].Height.Set(25f, 0f);
+			SettingsBoolsPanel[1].Top.Set((4 * 30f) + 24, 0f);
+			SettingsBoolsPanel[1].Left.Set(-SettingsBoolsPanel[1].Width.Pixels / 2, 2 / 3f);
+			SettingsBoolsPanel[1].OnClick += (a, b) => BoolPress(1);
+			SettingsInnerPanel.Append(SettingsBoolsPanel[1]);
+
 			InfoText[0] = new UIText("Right click to increment/decrement by 32");
 			InfoText[0].Left.Set(-InfoText[0].MinWidth.Pixels / 2, 0.5f);
 			SettingsInnerPanel.Append(InfoText[0]);
@@ -104,6 +127,19 @@ namespace Crescent.UI
 			ThemeSelectVanilla.Left.Set(-50f, 1 / 3f); ThemeSelectVanilla.Top.Set(-50f, 0.75f);
 			ThemeSelectVanilla.OnClick += (a, b) => ThemeSelect(0);
 			SettingsInnerPanel.Append(ThemeSelectVanilla);
+		}
+
+		private void BoolPress(int v1)
+		{
+			if(v1 == 0)
+			{
+				Config.HalfsizeHealthbar = !Config.HalfsizeHealthbar;
+			}
+			else
+			{
+				Config.MonsterLeveling = !Config.MonsterLeveling;
+			}
+			SettingsBoolsPanel[v1].BackgroundColor = SettingsBoolsPanel[v1].BackgroundColor == Color.White ? Color.Black : Color.White;
 		}
 
 		private void ThemeSelect(byte v)

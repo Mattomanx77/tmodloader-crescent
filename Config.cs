@@ -13,6 +13,8 @@ namespace Crescent
 	{
 		public static Color[] BarColor = new Color[3];
 		public static byte Theme = 1;
+		public static bool HalfsizeHealthbar = false;
+		public static bool MonsterLeveling = true;
 
 		static string ConfigPath = Path.Combine(Main.SavePath, "Mod Configs", "Crescent.json");
 
@@ -37,6 +39,8 @@ namespace Crescent
 				BarColor[1] = GetColor("ManaBarColor");
 				BarColor[2] = GetColor("ExpBarColor");
 				Theme = (byte)Configuration.Get("Theme", 1);
+				HalfsizeHealthbar = Configuration.Get("HalfsizeHealthbar", false);
+				MonsterLeveling = Configuration.Get("MonsterLeveling", true);
 				return true;
 			}
 			return false;
@@ -54,6 +58,8 @@ namespace Crescent
 			Configuration.Put("ManaBarColor", "0,0,255");
 			Configuration.Put("ExpBarColor", "0,127,0");
 			Configuration.Put("Theme", 1);
+			Configuration.Put("HalfsizeHealthbar", false);
+			Configuration.Put("MonsterLeveling", true);
 			Configuration.Save();
 			ReadConfig();
 		}

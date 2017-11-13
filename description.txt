@@ -1,3 +1,4 @@
+THIS IS ACTUALLY 0.4.4.1, TMODLOADER WONT LET ME CHANGE VERSION NUMBERS LOWER!
 This is a UI/RPG mod.
 I made it in my spare time.
 tl;dr: Stats, skills, and perks!
@@ -30,6 +31,15 @@ v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4.5 - Adamant warnings
++Added 1 new perk: "Adamant"
++Warning label for reset
++Tooltips for stats
++Disable enemy leveling option
++Half sized healthbar option
++Make the config menu button also close the config
++Fix enemy scaling
+
 v0.4.4.1 - Small tweak
 +Changed how enemies scale defence
 +Enemy scaling is now less harsh in Hardmode,
@@ -88,7 +98,7 @@ v0.2.1 - Tweaks and Fixes
 =Balance change, each point into a stat only effects by .1% (formerly .5%), but now each level you get 10 points instead of 7
 
 v0.2 - Perk Overhaul and Optimization
-+Added 1 new perk "Overlord"
++Added 1 new perk: "Overlord"
 +Some optimization
 +A bug with point calculation
 -Save format had to change a bit,

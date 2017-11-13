@@ -13,7 +13,8 @@ namespace Crescent
 	{
 		internal static Crescent mod;
 		public const int NUMSTATS = 8;
-		public const int NUMPERKS = 5;
+		public const int NUMPERKS = 6;
+		public const int NUMSKILLS = 2;
 		private UserInterface LifeForceInterface;
 		internal UserInterface VanillaThemeInterface;
 		internal UserInterface SettingsInterface;
@@ -40,7 +41,7 @@ namespace Crescent
 		public override void PreSaveAndQuit()
 		{
 			mod.LifeForceUI.HideButtonClicked(2);
-			mod.LifeForceUI.PerkDescClose();
+			//mod.LifeForceUI.PerkDescClose();
 			mod.VanillaThemeUI.HideButtonClicked(2);
 			//mod.VanillaThemeUI.PerkDescClose();
 			mod.SettingsUI.SettingsToggle(false);
@@ -49,6 +50,8 @@ namespace Crescent
 			Config.Configuration.Put("ManaBarColor", Config.BarColor[1].R + "," + Config.BarColor[1].G + "," + Config.BarColor[1].B);
 			Config.Configuration.Put("ExpBarColor", Config.BarColor[2].R + "," + Config.BarColor[2].G + "," + Config.BarColor[2].B);
 			Config.Configuration.Put("Theme", Config.Theme);
+			Config.Configuration.Put("HalfsizeHealthbar", Config.HalfsizeHealthbar);
+			Config.Configuration.Put("MonsterLeveling", Config.MonsterLeveling);
 			Config.Configuration.Save(false);
 		}
 

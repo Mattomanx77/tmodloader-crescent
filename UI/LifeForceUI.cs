@@ -25,6 +25,8 @@ namespace Crescent.UI
 		private UITransparantImage LifeGlass1 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarGlass1"), Color.White * 0.75f);
 		private UITransparantImage LifeGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarGlass2"), Color.White * 0.5f);
 		private UITransparantImage LifeGlassBroken = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarGlassBroken"), Color.White * 0.25f);
+		private UIText ALifeText = new UIText("0");
+		public UITransparantImage ALifeFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarFill"), Color.Gray);
 		private UIImage Mana = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ManaBar"));
 		private UIText ManaText = new UIText("0");
 		public UITransparantImage ManaFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ManaBarFill"), Color.White);
@@ -38,11 +40,14 @@ namespace Crescent.UI
 		private Texture2D buttonHideImage = ModLoader.GetTexture("Crescent/Assets/UI/ThemeClassic/HideButton");
 		private Texture2D buttonRespecImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RespecButton");
 		private Texture2D buttonRestartImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RestartButton");
+		private UIBox RestartConfirm = new UIBox();
+		private UIText[] RestartConfirmText = new UIText[2] { new UIText("Are you sure you want"), new UIText("to start all over?") };
+		private UIText[] RestartConfirmButton = new UIText[2] { new UIText("[Yes]"), new UIText("[No]") };
 		private UIImage PerkIncButton;
 		private int[] PerkCost = new int[Crescent.NUMPERKS];
 		private int[] PerkValue = new int[Crescent.NUMPERKS];
-		public bool[] PerkOne = new bool[Crescent.NUMPERKS] { false, false, false, false, true };
-		public string[] PerkRelevantString = new string[Crescent.NUMPERKS] { "Wing Muscle", "Overlord", "Jumpman", "Reaper of Stars", "Second Wind" };
+		public bool[] PerkOne = new bool[Crescent.NUMPERKS] { false, false, false, false, true, false };
+		public string[] PerkRelevantString = new string[Crescent.NUMPERKS] { "Wing Muscle", "Overlord", "Jumpman", "Reaper of Stars", "Second Wind", "Adamant" };
 		public string[] PerkRelevantDescString = new string[Crescent.NUMPERKS];
 		public string[] SkillRelevantString = new string[Crescent.NUMPERKS];
 		public string[] SkillRelevantDescString = new string[Crescent.NUMPERKS];
@@ -59,10 +64,12 @@ namespace Crescent.UI
 		private bool SkillMenuVisible;
 		private UIText SttText = new UIText("");
 		private UIText[] StatText = new UIText[Crescent.NUMSTATS];
+		public UIText[] StatDesc = new UIText[Crescent.NUMSTATS];
 		private UIImage[] StatButton = new UIImage[Crescent.NUMSTATS];
 		private UIText PerkDscTitleText = new UIText("");
 		private UIText PerkDscText = new UIText("");
 		private Vector2 offset; private bool dragging = false;
+		private UIText MouseText = new UIText("");
 
 		public override void OnInitialize()
 		{
@@ -82,6 +89,8 @@ namespace Crescent.UI
 			LifeFill.color = Config.BarColor[0];
 			LifeFill.Top.Set(8f, 0f);
 			Life.Append(LifeFill);
+			ALifeFill.Top.Set(8f, 0f);
+			Life.Append(ALifeFill);
 			LifeGlass1.Left.Set(46f, 0f); LifeGlass1.Top.Set(8f, 0f);
 			Life.Append(LifeGlass1);
 			LifeGlass2.Left.Set(46f, 0f); LifeGlass2.Top.Set(8f, 0f);
@@ -89,7 +98,9 @@ namespace Crescent.UI
 			LifeGlassBroken.Left.Set(46f, 0f); LifeGlassBroken.Top.Set(8f, 0f);
 			Life.Append(LifeGlassBroken);
 			LifeText.Top.Set(-10f, 0.5f);
-			Life.Append(LifeText);	
+			Life.Append(LifeText);
+			ALifeText.Top.Set(-10f + LifeText.MinHeight.Pixels / 2, 0.5f);
+			Life.Append(ALifeText);
 
 			//Exp
 			Exp.Top.Set(52f, 0f);
@@ -167,12 +178,23 @@ namespace Crescent.UI
 			StatButton[6] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/VitalityButton"));
 			StatButton[7] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RadianceButton"));
 
+			StatDesc[0] = new UIText("0");
+			StatDesc[1] = new UIText("0");
+			StatDesc[2] = new UIText("0");
+			StatDesc[3] = new UIText("0");
+			StatDesc[4] = new UIText("0");
+			StatDesc[5] = new UIText("0");
+			StatDesc[6] = new UIText("0");
+			StatDesc[7] = new UIText("0");
+
 			for (int i = 0; i < Crescent.NUMSTATS; i++)
 			{
 				int n = i;
 				StatButton[i].Left.Set(1f, 0f); StatButton[i].Top.Set(i*48 + 24f, 0f);
 				StatButton[i].OnClick += (a, b) => StatButtonClicked(n, true);
 				StatButton[i].OnRightClick += (a, b) => StatButtonClicked(n, false);
+				StatButton[i].OnMouseOver += (a, b) => StatButtonHover(n);
+				StatButton[i].OnMouseOut += (a, b) => StatButtonHover(-1);
 				StatUI.Append(StatButton[i]);
 				StatText[i] = new UIText("");
 				StatText[i].Left.Set(52f, 0f);
@@ -183,6 +205,25 @@ namespace Crescent.UI
 			SttText.Left.Set(17f, 0f);
 			SttText.Top.Set(Crescent.NUMSTATS * 48 + 54f, 0f);
 			StatUI.Append(SttText);
+
+			//Restart Confirmation
+			RestartConfirm.backgroundColor = new Color(223, 223, 223, 255);
+			RestartConfirm.Width.Set(200f, 0f); RestartConfirm.Height.Set(75f, 0f);
+
+			RestartConfirmText[0].Left.Set(-RestartConfirmText[0].MinWidth.Pixels / 2f, 0.5f);
+			RestartConfirm.Append(RestartConfirmText[0]);
+			RestartConfirmText[1].Left.Set(-RestartConfirmText[1].MinWidth.Pixels / 2f, 0.5f);
+			RestartConfirmText[1].Top.Set(RestartConfirmText[0].MinHeight.Pixels, 0f);
+			RestartConfirm.Append(RestartConfirmText[1]);
+			RestartConfirmButton[0].Top.Set(-RestartConfirmButton[0].MinHeight.Pixels - 6, 1f);
+			RestartConfirmButton[0].Left.Set(-RestartConfirmButton[0].MinWidth.Pixels / 2, 1 / 3f);
+			RestartConfirmButton[0].OnMouseDown += (a, b) => RestartButtonChecked(true);
+			RestartConfirm.Append(RestartConfirmButton[0]);
+			RestartConfirmButton[1].Top.Set(-RestartConfirmButton[1].MinHeight.Pixels - 6, 1f);
+			RestartConfirmButton[1].Left.Set(-RestartConfirmButton[1].MinWidth.Pixels / 2, 2 / 3f);
+			RestartConfirmButton[1].OnMouseDown += (a, b) => RestartButtonChecked(false);
+			RestartConfirm.Append(RestartConfirmButton[1]);
+
 			#endregion
 			#region PerkUI
 			PerkUI.Height.Set(386f, 0f);
@@ -212,6 +253,7 @@ namespace Crescent.UI
 			PerkButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Jumpman"));
 			PerkButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_ReaperofStars"));
 			PerkButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_SecondWind"));
+			PerkButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Adamant"));
 
 			for (int i = 0; i < Crescent.NUMPERKS; i++)
 			{
@@ -229,6 +271,30 @@ namespace Crescent.UI
 			PerkDsc.Remove();
 			PerkIncButton.Remove();
 			#endregion
+		}
+
+		private void StatButtonHover(int n)
+		{
+			Player player = Main.player[Main.myPlayer];
+			StatDesc[0] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] * 0.1).ToString() + "% melee damage\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] * 0.1).ToString() + "% throwing damage");
+			StatDesc[1] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[1] * 0.05).ToString() + "% movement speed");
+			StatDesc[2] = new UIText("Increased crit chance\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[2] * 0.1).ToString() + "% money gained");
+			StatDesc[3] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] * 0.1).ToString() + "% ranged damage" + (Crescent.mod.thoriumLoaded ? "/n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] * 0.1).ToString() + "% symphonic damage" : ""));
+			StatDesc[4] = new UIText("+" + (Math.Floor(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[4] * 0.1)).ToString() + " defense");
+			StatDesc[5] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% mana\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% magic damage	" + (Crescent.mod.tremorLoaded ? "/n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% alchemical damage" : ""));
+			StatDesc[6] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6] * 0.1).ToString() + "% life");
+			StatDesc[7] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[7] * 0.1).ToString() + "% minion damage" + (Crescent.mod.thoriumLoaded ? "/n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[7] * 0.1).ToString() + "% radiant damage" : ""));
+
+			if (n != -1)
+			{
+				Append(MouseText);
+				MouseText.SetText(StatDesc[n].Text);
+			}
+			else
+			{
+				MouseText.Remove();
+				MouseText.SetText("");
+			}
 		}
 
 		private void DragStart(UIMouseEvent evt, UIElement listeningElement)
@@ -277,23 +343,26 @@ namespace Crescent.UI
 
 		public void PerkCostUpdate(Player player)
 		{
-			PerkCost[0] = 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[0]);
+			PerkCost[0] = 25 + 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[0]);
 			PerkCost[1] = 100 * (int)Math.Pow(3, (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]));
 			PerkCost[2] = 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]);
 			PerkCost[3] = 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
 			PerkCost[4] = 100;
+			PerkCost[5] = 100 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5]);
 
-			PerkValue[0] = 50 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[0]);
+			PerkValue[0] = 25 + 25 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[0]);
 			PerkValue[1] = 100 * (int)Math.Pow(3, -1 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]));
 			PerkValue[2] = 25 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]);
 			PerkValue[3] = 50 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
 			PerkValue[4] = 100;
+			PerkValue[5] = 100 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5]);
 
 			PerkRelevantDescString[0] = "Each point into this perk\ngives +20% flight\nCosts " + PerkCost[0] + " points to upgrade";
 			PerkRelevantDescString[1] = "Each point into this perk\ngives +1 maximum minions\nCosts " + PerkCost[1] + " points to upgrade";
 			PerkRelevantDescString[2] = "Each point into this perk\nboosts your jump 1 block\nCosts " + PerkCost[2] + " points to upgrade";
 			PerkRelevantDescString[3] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + PerkCost[3] + " points to upgrade";
 			PerkRelevantDescString[4] = "Survive a fatal blow with\n10% of your life\nCosts 100 points to obtain";
+			PerkRelevantDescString[5] = "Gain an extra healthbar\nthat scales with defence\nCosts 100 points to obtain";
 		}
 
 		public void PerkButtonClicked(int value)
@@ -363,6 +432,7 @@ namespace Crescent.UI
 				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt - i;
 			}
 			Main.PlaySound(SoundID.MenuTick);
+			StatButtonHover(num);
 		}
 
 		public void RespecButtonClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -380,21 +450,32 @@ namespace Crescent.UI
 			Main.PlaySound(2, -1, -1, 4);
 		}
 
-		public void RestartButtonClicked(UIMouseEvent evt, UIElement listeningElement)
+		private void RestartButtonClicked(UIMouseEvent evt, UIElement listeningElement)
 		{
-			Player player = Main.player[Main.myPlayer];
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp = 0;player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl = 0;
-			for (int i = 0; i < Crescent.NUMSTATS; i++)
-			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[i] = 0;
-			}
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = 0;
-			player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp = (int)(Math.Pow((player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl + 1) * 333, 1.2));
-			for (int i = 0; i < 8; i++)
-			{
-				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] = 0;
-			}
+			RestartConfirm.Top.Set(Main.MouseScreen.Y, 0f);
+			RestartConfirm.Left.Set(Main.MouseScreen.X - RestartConfirm.Width.Pixels / 2, 0f);
+			Append(RestartConfirm);
+		}
+
+		private void RestartButtonChecked(bool yes)
+		{
 			Main.PlaySound(SoundID.MenuTick);
+			if (yes)
+			{
+				Player player = Main.player[Main.myPlayer];
+				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp = 0; player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl = 0;
+				for (int i = 0; i < Crescent.NUMSTATS; i++)
+				{
+					player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[i] = 0;
+				}
+				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt = 0;
+				player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp = (int)(Math.Pow((player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl + 1) * 333, 1.2));
+				for (int i = 0; i < 8; i++)
+				{
+					player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] = 0;
+				}
+			}
+			RestartConfirm.Remove();
 		}
 
 		private void TopRightClicked(UIMouseEvent evt, UIElement listeningElement)
@@ -407,6 +488,9 @@ namespace Crescent.UI
 		public override void Update(GameTime gameTime)
 		{
 			Player player = Main.player[Main.myPlayer];
+			int _Life = player.statLife, _LifeMax = player.statLifeMax2, _ALife = 0, _ALifeMax = (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5] * player.statDefense);
+			_LifeMax -= _ALifeMax; _Life = _Life > _LifeMax ? _LifeMax : _Life;
+			_ALife = player.statLife > _LifeMax ? player.statLife - _LifeMax : 0;
 
 			//Topright
 			Level.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl.ToString());
@@ -414,10 +498,24 @@ namespace Crescent.UI
 			Level.TextColor = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt > 0 ? Gold : Color.White;
 
 			//Resource bars
-			Life.Left.Set(-84-46-player.statLifeMax * (Main.screenWidth >= 1626 ? 3 : (Main.screenWidth >= 1376 ? 2.5f : (Main.screenWidth >= 1126 ? 2 : 1.5f))), 1f);
-			LifeFill.Left.Set(46+(player.statLifeMax - (player.statLife / (float)player.statLifeMax2) * player.statLifeMax) * 3, 0f);
-			LifeText.SetText(player.statLife.ToString() + "/" + player.statLifeMax2.ToString());
-			LifeText.Left.Set((-LifeText.Text.Length * 3.7f), (player.statLifeMax/1000f));
+			Life.Left.Set(-84-46-player.statLifeMax * (Main.screenWidth >= 1626 ? 3 : Main.screenWidth >= 1376 ? 2.5f : Main.screenWidth >= 1126 ? 2 : 1.5f) * (Config.HalfsizeHealthbar ? 0.5f : 1), 1f);
+			LifeFill.Left.Set(46+(player.statLifeMax - (_Life / (float)_LifeMax) * player.statLifeMax) * 3, 0f);
+			LifeText.SetText(_Life.ToString() + "/" + _LifeMax.ToString());
+			LifeText.Left.Set(-LifeText.MinWidth.Pixels / 2f, player.statLifeMax / (1000f * (Config.HalfsizeHealthbar ? 2 : 1)));
+			if (_ALifeMax > 0)
+			{
+				LifeText.Top.Set(-10f -LifeText.MinHeight.Pixels/2, 0.5f);
+				ALifeFill.Left.Set(46 + (player.statLifeMax - (_ALife / (float)_ALifeMax) * player.statLifeMax) * 3, 0f);
+				ALifeText.SetText(_ALife.ToString() + "/" + _ALifeMax.ToString());
+				ALifeText.Left.Set(-ALifeText.MinWidth.Pixels / 2f, player.statLifeMax / (1000f * (Config.HalfsizeHealthbar ? 2 : 1)));
+			}
+			else
+			{
+				LifeText.Top.Set(-10f, 0.5f);
+				ALifeFill.Left.Set(0f, 1f);
+				ALifeText.SetText("");
+			}
+
 			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).secondWindTimer > 0)
 			{
 				LifeGlassBroken.ImageScale = 1f;
@@ -432,7 +530,7 @@ namespace Crescent.UI
 			Exp.Left.Set(Life.Left.Pixels + 150f < -1080 ? -1080 : Life.Left.Pixels + 150f, 1f);
 			ExpFill.Left.Set(-(Exp.Width.Pixels + 46 + Exp.Left.Pixels) + (Exp.Left.Pixels + 34 + 46) * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp / (float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp), 1f);
 			ExpText.SetText((Math.Floor(10000*(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp/(float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp))/100).ToString() + "%");
-			ExpText.Left.Set((-LifeText.Text.Length * 3.7f), (player.statLifeMax / 1000f));
+			ExpText.Left.Set(-ExpText.MinWidth.Pixels / 2f, player.statLifeMax / (1000f * (Config.HalfsizeHealthbar ? 2 : 1)));
 
 			Mana.Top.Set(50-800+player.statManaMax * (Main.screenHeight >= 888 ? 4 : (Main.screenHeight >= 688 ? 3 : 2)), 0f);		
 			ManaFill.Top.Set((-player.statManaMax+(player.statMana / (float)player.statManaMax2)*player.statManaMax)*4, 0f);
@@ -456,6 +554,8 @@ namespace Crescent.UI
 				if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i] > 0) { PerkText[i].SetText("(" + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[i].ToString() + ")"); }
 				else { PerkText[i].SetText(""); }
 			}
+
+			MouseText.Top.Set(Main.MouseScreen.Y + 16, 0f);MouseText.Left.Set(Main.MouseScreen.X + 16, 0f);
 
 			DrawInterface_Resources_Buffs();
 			DrawInterface_Resources_Breath();
@@ -696,14 +796,11 @@ namespace Crescent.UI
 		class UIBox : UIElement
 		{
 			public Color backgroundColor = Color.Gray;
-			private static Texture2D White;
 			private static Texture2D BG;
 			private static Texture2D Dark;
 
 			public UIBox()
 			{
-				if (White == null)
-					White = ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/PerkExt_White");
 				if (BG == null)
 					BG = ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/PerkExt_BG");
 				if (Dark == null)
@@ -717,11 +814,12 @@ namespace Crescent.UI
 				int height = (int)Math.Ceiling(dimensions.Height);
 				int width = (int)Math.Ceiling(dimensions.Width);
 
-				spriteBatch.Draw(BG, new Rectangle(point1.X + 1, point1.Y + 1, width - 2, height - 2), backgroundColor);
-				spriteBatch.Draw(White, new Rectangle(point1.X + 1, point1.Y, width - 2, 2), backgroundColor);
-				spriteBatch.Draw(White, new Rectangle(point1.X, point1.Y + 1, 2, height - 2), backgroundColor);
-				spriteBatch.Draw(Dark, new Rectangle(point1.X + 1, point1.Y + height - 2, width - 2, 2), backgroundColor);
-				spriteBatch.Draw(Dark, new Rectangle(point1.X + width - 2, point1.Y + 1, 2, height - 2), backgroundColor);
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X, point1.Y, width, height), Color.Black);
+				spriteBatch.Draw(BG, new Rectangle(point1.X + 2, point1.Y + 2, width - 4, height - 4), backgroundColor);
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 2, point1.Y + 1, width - 4, 2), Color.White);
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 1, point1.Y + 2, 2, height - 4), Color.White);
+				spriteBatch.Draw(Dark, new Rectangle(point1.X + 2, point1.Y + height - 3, width - 4, 2), backgroundColor);
+				spriteBatch.Draw(Dark, new Rectangle(point1.X + width - 3, point1.Y + 2, 2, height - 4), backgroundColor);
 			}
 		}
 

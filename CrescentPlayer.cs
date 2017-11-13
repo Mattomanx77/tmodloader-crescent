@@ -17,13 +17,13 @@ namespace Crescent
         public int Llvl = 0;
         public int Llxp = 0;
         public int Lstt = 0;
-        public float[] Lnum = new float[8];
+        public float[] Lnum = new float[Crescent.NUMSTATS];
         public float Pos = 1.0f;
 		public float Pos2 = 1.0f;
 		public float Use = 1000f;
-		public int[] Perk = new int[32];
-		public int[] Skill = new int[32];
-		public int selectedSkill = 0;
+		public int[] Perk = new int[Crescent.NUMPERKS];
+		public int[] Skill = new int[Crescent.NUMSKILLS];
+		public int selectedSkill = 1;
 		public int secondWindTimer = 0;
 
 		public override TagCompound Save()
@@ -81,7 +81,8 @@ namespace Crescent
 		{
 			if (Crescent.keyConfig.JustPressed)
 			{
-				Crescent.mod.SettingsUI.SettingsToggle(true);
+				if (Crescent.mod.SettingsUI.HasChild(Crescent.mod.SettingsUI.Settings)) Crescent.mod.SettingsUI.SettingsToggle(false);
+				else Crescent.mod.SettingsUI.SettingsToggle(true);
 			}
 
 			if (Crescent.keySkill.JustPressed)
@@ -150,6 +151,7 @@ namespace Crescent
 		public override void PostUpdateEquips()
 		{
 			player.statDefense += (int)(Lnum[4] / (Use / 100));
+			player.statLifeMax2 += (Perk[5] * player.statDefense);
 			Player.jumpHeight += Perk[2]*4;
 			//Player.jumpSpeed *= 1 + Perk[2]*0.01f;
 		}

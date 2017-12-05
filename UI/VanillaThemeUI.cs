@@ -140,6 +140,8 @@ namespace Crescent.UI
 			PerksButtonsIcons[3] = new UIImage(ModLoader.GetTexture("Terraria/Item_184"));
 			PerksButtonsIcons[4] = new UIImage(ModLoader.GetTexture("Terraria/Item_58"));
 			PerksButtonsIcons[5] = new UIImage(ModLoader.GetTexture("Terraria/Item_3810"));
+			PerksButtonsIcons[6] = new UIImage(ModLoader.GetTexture("Terraria/Item_320"));
+			PerksButtonsIcons[7] = new UIImage(ModLoader.GetTexture("Terraria/Item_1569"));
 
 			for (int i = 0; i < Crescent.NUMPERKS; i++){
 				int n = i;

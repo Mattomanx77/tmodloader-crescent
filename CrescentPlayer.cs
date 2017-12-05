@@ -118,14 +118,10 @@ namespace Crescent
 			player.magicCrit = LuckFunction(player.magicCrit);
 			player.minionDamage += Lnum[7] / Use;
 			player.maxMinions = player.maxMinions + Perk[1];
-			if (Crescent.mod.thoriumLoaded)
-			{
-				ThoriumDamage();
-			}
-			if (Crescent.mod.tremorLoaded)
-			{
-				TremorDamage();
-			}
+			if (Crescent.mod.thoriumLoaded) ThoriumDamage();
+			if (Crescent.mod.tremorLoaded) TremorDamage();
+			if (Crescent.mod.enigmaLoaded) EnigmaDamage();
+			if (Crescent.mod.sentriesLoaded) SentryDamage();
 		}
 
 		private int LuckFunction(int num)
@@ -148,6 +144,20 @@ namespace Crescent
 			player.GetModPlayer<Tremor.MPlayer>().alchemicalCrit = LuckFunction(player.GetModPlayer<Tremor.MPlayer>().alchemicalCrit);
 		}
 
+		private void EnigmaDamage()
+		{
+			//player.GetModPlayer<Laugicality.LaugicalityPlayer>().conjurationDamage += Lnum[7] / Use; They're all mystic damage?
+			//player.GetModPlayer<Laugicality.LaugicalityPlayer>().destructionDamage += Lnum[5] / Use;
+			//player.GetModPlayer<Laugicality.LaugicalityPlayer>().illusionDamage += Lnum[5] / Use;
+			player.GetModPlayer<Laugicality.LaugicalityPlayer>().mysticDamage += Lnum[5] / Use;
+			player.GetModPlayer<Laugicality.LaugicalityPlayer>().mysticCrit = LuckFunction(player.GetModPlayer<Laugicality.LaugicalityPlayer>().mysticCrit);
+		}
+
+		private void SentryDamage()
+		{
+			player.GetModPlayer<ExpandedSentries.ESPlayer>().sentryDamage += Lnum[5] / Use;
+		}
+
 		public override void PostUpdateEquips()
 		{
 			player.statDefense += (int)(Lnum[4] / (Use / 100));
@@ -166,9 +176,10 @@ namespace Crescent
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			player.statMana += Perk[3];
+			player.statLife += Perk[7];
 
 			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
-			if (target.boss && target.life < 0) { Lexp += Llxp/10; }
+			if (target.boss && target.life < 0) { GrantBossXP(target); }
 			CheckLifeforce(Lexp);
 		}
 
@@ -177,8 +188,34 @@ namespace Crescent
 			player.statMana += Perk[3];
 
 			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
-			if (target.boss && target.life < 0) { Lexp += Llxp/10; }
+			if (target.boss && target.life < 0) { GrantBossXP(target); }
 			CheckLifeforce(Lexp);
+		}
+
+		private void GrantBossXP(NPC target)
+		{
+			Lexp += Llxp / 100;
+			if (target.GivenName.Contains("King Slime") && !NPC.downedSlimeKing) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Eye of Cthulhu") && !NPC.downedBoss1) { Lexp += Llxp - Lexp; }
+			if ((target.GivenName.Contains("Brain of Cthulhu") || target.GivenName.Contains("Eater of Worlds")) && !NPC.downedBoss2) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Skeletron") && !target.GivenName.Contains("Prime") && !NPC.downedBoss3) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Queen Bee") && !NPC.downedQueenBee) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Wall of Flesh") && !Main.hardMode) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Destroyer") && !NPC.downedMechBoss1) { Lexp += Llxp - Lexp; }
+			if ((target.GivenName.Contains("Retinazer") || target.GivenName.Contains("Spazmatism")) && !NPC.downedMechBoss2) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Skeletron Prime") && !NPC.downedMechBoss3) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Plantera") && !NPC.downedPlantBoss) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Golem") && !NPC.downedGolemBoss) { Lexp += Llxp - Lexp; }
+			if (target.GivenName.Contains("Moon Lord")) { Lexp += Llxp - Lexp; }
+		}
+
+		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		{
+			if(damageSource.SourceOtherIndex == 0 && Perk[6] > 0)
+			{
+				damage /= Perk[6];
+			}
+			return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
 		}
 
 		public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

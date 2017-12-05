@@ -33,15 +33,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="Crescent.cs" />
     <Compile Include="CrescentPlayer.cs" />
     <Compile Include="Dusts\RadiantParticle.cs" />
     <Compile Include="Items\Weapons\RadiantScythe.cs" />
     <Compile Include="Items\Weapons\StrengthSword.cs" />
+    <Compile Include="NPCs\CrescentGlobalNPC.cs" />
     <Compile Include="Projectiles\RadiantScytheProjectile.cs" />
-    <Compile Include="UI\CrescentUI.cs" />
+    <Compile Include="UI\LifeForceUI.cs" />
+    <Compile Include="UI\SettingsUI.cs" />
+    <Compile Include="UI\VanillaThemeUI.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Enigma">
+      <HintPath>.\Enigma.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_32\Microsoft.Xna.Framework\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.dll</HintPath>
@@ -64,6 +71,12 @@
     <Reference Include="System" />
     <Reference Include="Terraria">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\terraria\Terraria.exe</HintPath>
+    </Reference>
+    <Reference Include="Thorium">
+      <HintPath>.\Thorium.dll</HintPath>
+    </Reference>
+    <Reference Include="Tremor">
+      <HintPath>.\Tremor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +110,9 @@
     <Content Include="Items\Weapons\RadiantScythe.png" />
     <Content Include="Items\Weapons\StrengthSword.png" />
     <Content Include="Projectiles\RadiantScytheProjectile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

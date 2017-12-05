@@ -13,7 +13,7 @@ namespace Crescent
 	{
 		internal static Crescent mod;
 		public const int NUMSTATS = 8;
-		public const int NUMPERKS = 6;
+		public const int NUMPERKS = 8;
 		public const int NUMSKILLS = 2;
 		private UserInterface LifeForceInterface;
 		internal UserInterface VanillaThemeInterface;
@@ -26,6 +26,8 @@ namespace Crescent
 		public bool UIOpen;
 		public bool thoriumLoaded;
 		public bool tremorLoaded;
+		public bool enigmaLoaded;
+		public bool sentriesLoaded;
 
 		public Crescent()
 		{
@@ -60,6 +62,8 @@ namespace Crescent
 			Config.Load();
 			thoriumLoaded = ModLoader.GetMod("ThoriumMod") != null;
 			tremorLoaded = ModLoader.GetMod("Tremor") != null;
+			enigmaLoaded = ModLoader.GetMod("Laugicality") != null;
+			sentriesLoaded = ModLoader.GetMod("ExpandedSentries") != null;
 			mod = this;
 			if (!Main.dedServ)
 			{

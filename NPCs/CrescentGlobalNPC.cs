@@ -32,9 +32,5 @@ namespace Crescent.NPCs
 
 			return true;
 		}
-
-		public override void NPCLoot(NPC npc)
-		{
-		}
 	}
 }

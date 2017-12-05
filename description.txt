@@ -1,4 +1,4 @@
-THIS IS ACTUALLY 0.4.4.1, TMODLOADER WONT LET ME CHANGE VERSION NUMBERS LOWER!
+THIS IS ACTUALLY 0.4.5.1, TMODLOADER WONT LET ME CHANGE VERSION NUMBERS LOWER!
 This is a UI/RPG mod.
 I made it in my spare time.
 tl;dr: Stats, skills, and perks!
@@ -10,15 +10,16 @@ Adds a Leveling system (With no level cap!), and a UI (Click the top-right box)
 In this UI, you have 8 stats on one pane, and numerous perks & skills on the other.
 Strength (Effect: Increase melee/throwing damage)
 Agility (Effect: Increase movement speed)
+Luck (Effect: Increase crit chance)
 Dexterity (Effect: Increase ranged damage)
-Fortune (Effect: Increase crit chance)
 Fortitude (Effect: Increases overall defence by 1 every 10 points)
 Intelligence (Effect: Increases magic damage and maximum mana)
 Vitality (Effect: Increase maximum health)
 Radiance (Effect: Increases summoner damage)
 See the ingame UI for perks/skills and their descriptions!
 
-Thanks to gateboy6 for pointing out bugs and things that I missed repeatedly
+Big thanks to XL SwAt for drawing some of the textures for this mod!
+Thanks to gateboy6 for pointing out bugs and things that I missed repeatedly!
 
 -IN THE FUTURE (HOPEFULLY)-
 More perks/skills
@@ -31,6 +32,22 @@ v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4.6 - Stats pane and more mod support!
++Stats pane now updated to the new theme. One more to go!
++Support for Enigma and Expanded Sentries!
++Added 1 new perk: Vampiric Edge
++Vitality also increases how much healing you get from potions!
++Tweaked how bosses grant XP. The first time a boss is killed, the killer gains a whole level. Each following kill (as well as undocumented bosses) will now only grant +1%
+
+v0.4.5.1 - Small fix
++Turned off a debug feature
++Added a new perk for your troubles: "Soft Landing"
++Fixed Adamant's scaling.
+Origionally, Adamant would cost 100, 200, 300...
+I decided to instead make it always cost 100.
+Adamant would be a useless perk with increasing cost
+Vitality would end up being more worth the points
+
 v0.4.5 - Adamant warnings
 +Added 1 new perk: "Adamant"
 +Warning label for reset

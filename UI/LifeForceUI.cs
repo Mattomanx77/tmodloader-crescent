@@ -26,7 +26,7 @@ namespace Crescent.UI
 		private UITransparantImage LifeGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarGlass2"), Color.White * 0.5f);
 		private UITransparantImage LifeGlassBroken = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarGlassBroken"), Color.White * 0.25f);
 		private UIText ALifeText = new UIText("0");
-		public UITransparantImage ALifeFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarFill"), Color.Gray);
+		public UITransparantImage ALifeFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/LifeBarFill"), Color.Gray * 0.5f);
 		private UIImage Mana = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ManaBar"));
 		private UIText ManaText = new UIText("0");
 		public UITransparantImage ManaFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ManaBarFill"), Color.White);
@@ -37,17 +37,17 @@ namespace Crescent.UI
 		public UITransparantImage ExpFill = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ExpBarFill"), Color.White);
 		private UITransparantImage ExpGlass1 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ExpBarGlass1"), Color.White * 0.75f);
 		private UITransparantImage ExpGlass2 = new UITransparantImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/ExpBarGlass2"), Color.White * 0.5f);
-		private Texture2D buttonHideImage = ModLoader.GetTexture("Crescent/Assets/UI/ThemeClassic/HideButton");
-		private Texture2D buttonRespecImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RespecButton");
-		private Texture2D buttonRestartImage = ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RestartButton");
+		private Texture2D buttonHideImage = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/HideButton");
+		private Texture2D buttonRespecImage = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/RespecButton");
+		private Texture2D buttonRestartImage = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/RestartButton");
 		private UIBox RestartConfirm = new UIBox();
 		private UIText[] RestartConfirmText = new UIText[2] { new UIText("Are you sure you want"), new UIText("to start all over?") };
 		private UIText[] RestartConfirmButton = new UIText[2] { new UIText("[Yes]"), new UIText("[No]") };
 		private UIImage PerkIncButton;
 		private int[] PerkCost = new int[Crescent.NUMPERKS];
 		private int[] PerkValue = new int[Crescent.NUMPERKS];
-		public bool[] PerkOne = new bool[Crescent.NUMPERKS] { false, false, false, false, true, false };
-		public string[] PerkRelevantString = new string[Crescent.NUMPERKS] { "Wing Muscle", "Overlord", "Jumpman", "Reaper of Stars", "Second Wind", "Adamant" };
+		public bool[] PerkOne = new bool[Crescent.NUMPERKS] { false, false, false, false, true, false, false, false };
+		public string[] PerkRelevantString = new string[Crescent.NUMPERKS] { "Wing Muscle", "Overlord", "Jumpman", "Reaper of Stars", "Second Wind", "Adamant", "Soft Landing", "Vampiric Edge" };
 		public string[] PerkRelevantDescString = new string[Crescent.NUMPERKS];
 		public string[] SkillRelevantString = new string[Crescent.NUMPERKS];
 		public string[] SkillRelevantDescString = new string[Crescent.NUMPERKS];
@@ -59,7 +59,7 @@ namespace Crescent.UI
 		private UIText[] SkillText = new UIText[Crescent.NUMPERKS];
 		private UIBox PerkDsc = new UIBox();
 		private Color Gold = new Color(255, 191, 0);
-		private StatUIBox StatUI = new StatUIBox();
+		private UIImage StatUI = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/StatsPane"));
 		private PerkUIBox PerkUI = new PerkUIBox();
 		private bool SkillMenuVisible;
 		private UIText SttText = new UIText("");
@@ -152,31 +152,31 @@ namespace Crescent.UI
 			//Append(StatUI);
 
 			UIImage respecButton = new UIImage(buttonRespecImage);
-			respecButton.Width.Set(15f, 0f);respecButton.Height.Set(15f, 0f);
-			respecButton.Left.Set(StatUI.Width.Pixels - 50f, 0f); respecButton.Top.Set(StatUI.Height.Pixels - 63f, 0f);
+			//respecButton.Width.Set(15f, 0f);respecButton.Height.Set(15f, 0f);
+			respecButton.Left.Set(56f, 0f); respecButton.Top.Set(370f, 0f);
 			respecButton.OnClick += new MouseEvent(RespecButtonClicked);
 			StatUI.Append(respecButton);
 
 			UIImage restartButton = new UIImage(buttonRestartImage);
-			restartButton.Width.Set(17f, 0f);restartButton.Height.Set(17f, 0f);
-			restartButton.Left.Set(StatUI.Width.Pixels - 24f, 0f);restartButton.Top.Set(StatUI.Height.Pixels - 63f, 0f);
+			//restartButton.Width.Set(17f, 0f);restartButton.Height.Set(17f, 0f);
+			restartButton.Left.Set(76f, 0f);restartButton.Top.Set(370f, 0f);
 			restartButton.OnClick += new MouseEvent(RestartButtonClicked);
 			StatUI.Append(restartButton);
 
 			UIImage hideStatUIButton = new UIImage(buttonHideImage);
-			hideStatUIButton.Width.Set(17f, 0f); hideStatUIButton.Height.Set(17f, 0f);
-			hideStatUIButton.Left.Set(StatUI.Width.Pixels - 22f, 0f); hideStatUIButton.Top.Set(6f, 0f);
+			//hideStatUIButton.Width.Set(17f, 0f); hideStatUIButton.Height.Set(17f, 0f);
+			hideStatUIButton.Left.Set(86f, 0f); hideStatUIButton.Top.Set(0f, 0f);
 			hideStatUIButton.OnClick += (a, b) => HideButtonClicked(0);
 			StatUI.Append(hideStatUIButton);
 
-			StatButton[0] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/StrengthButton"));
-			StatButton[1] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/AgilityButton"));
-			StatButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/FortuneButton"));
-			StatButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/DexterityButton"));
-			StatButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/FortitudeButton"));
-			StatButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/IntelligenceButton"));
-			StatButton[6] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/VitalityButton"));
-			StatButton[7] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/LifeForceBoxSubAssets/RadianceButton"));
+			StatButton[0] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/StrengthButton"));
+			StatButton[1] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/AgilityButton"));
+			StatButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/FortuneButton"));
+			StatButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/DexterityButton"));
+			StatButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/FortitudeButton"));
+			StatButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/IntelligenceButton"));
+			StatButton[6] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/VitalityButton"));
+			StatButton[7] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/RadianceButton"));
 
 			StatDesc[0] = new UIText("0");
 			StatDesc[1] = new UIText("0");
@@ -190,20 +190,20 @@ namespace Crescent.UI
 			for (int i = 0; i < Crescent.NUMSTATS; i++)
 			{
 				int n = i;
-				StatButton[i].Left.Set(1f, 0f); StatButton[i].Top.Set(i*48 + 24f, 0f);
+				StatButton[i].Left.Set(8f, 0f); StatButton[i].Top.Set(i*40 + 46f, 0f);
 				StatButton[i].OnClick += (a, b) => StatButtonClicked(n, true);
 				StatButton[i].OnRightClick += (a, b) => StatButtonClicked(n, false);
 				StatButton[i].OnMouseOver += (a, b) => StatButtonHover(n);
 				StatButton[i].OnMouseOut += (a, b) => StatButtonHover(-1);
 				StatUI.Append(StatButton[i]);
 				StatText[i] = new UIText("");
-				StatText[i].Left.Set(52f, 0f);
-				StatText[i].Top.Set(16f, 0f);
+				StatText[i].Left.Set(45f, 0f);
+				StatText[i].Top.Set(20f, 0f);
 				StatButton[i].Append(StatText[i]);
 			}
 
-			SttText.Left.Set(17f, 0f);
-			SttText.Top.Set(Crescent.NUMSTATS * 48 + 54f, 0f);
+			SttText.Left.Set(9f, 0f);
+			SttText.Top.Set(372f, 0f);
 			StatUI.Append(SttText);
 
 			//Restart Confirmation
@@ -254,6 +254,8 @@ namespace Crescent.UI
 			PerkButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_ReaperofStars"));
 			PerkButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_SecondWind"));
 			PerkButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Adamant"));
+			PerkButton[6] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_SoftLanding"));
+			PerkButton[7] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_VampiricEdge"));
 
 			for (int i = 0; i < Crescent.NUMPERKS; i++)
 			{
@@ -276,14 +278,23 @@ namespace Crescent.UI
 		private void StatButtonHover(int n)
 		{
 			Player player = Main.player[Main.myPlayer];
-			StatDesc[0] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] * 0.1).ToString() + "% melee damage\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] * 0.1).ToString() + "% throwing damage");
+			StatDesc[0] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] * 0.1).ToString() + "% melee damage\n+"
+				+ (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[0] * 0.1).ToString() + "% throwing damage");
 			StatDesc[1] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[1] * 0.05).ToString() + "% movement speed");
 			StatDesc[2] = new UIText("Increased crit chance\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[2] * 0.1).ToString() + "% money gained");
-			StatDesc[3] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] * 0.1).ToString() + "% ranged damage" + (Crescent.mod.thoriumLoaded ? "/n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] * 0.1).ToString() + "% symphonic damage" : ""));
+			StatDesc[3] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] * 0.1).ToString() + "% ranged damage"
+				+ (Crescent.mod.thoriumLoaded ? "\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[3] * 0.1).ToString() + "% symphonic damage" : ""));
 			StatDesc[4] = new UIText("+" + (Math.Floor(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[4] * 0.1)).ToString() + " defense");
-			StatDesc[5] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% mana\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% magic damage	" + (Crescent.mod.tremorLoaded ? "/n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% alchemical damage" : ""));
-			StatDesc[6] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6] * 0.1).ToString() + "% life");
-			StatDesc[7] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[7] * 0.1).ToString() + "% minion damage" + (Crescent.mod.thoriumLoaded ? "/n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[7] * 0.1).ToString() + "% radiant damage" : ""));
+			StatDesc[5] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% mana\n+"
+				+ (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% magic damage"
+				+ (Crescent.mod.tremorLoaded ? "\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% alchemical damage" : "")
+				+ (Crescent.mod.enigmaLoaded ? "\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% mystic" +/*/Illusion/Destruction*/" damage" : "")
+				+ (Crescent.mod.sentriesLoaded ? "\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[5] * 0.1).ToString() + "% sentry damage" : ""));
+			StatDesc[6] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6] * 0.1).ToString() + "% life\n+"
+				+ (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[6] * 0.1).ToString() + "% potion healing");
+			StatDesc[7] = new UIText("+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[7] * 0.1).ToString() + "% minion damage"
+				+ (Crescent.mod.thoriumLoaded ? "\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[7] * 0.1).ToString() + "% radiant damage" : ""));
+				//+ (Crescent.mod.enigmaLoaded ? "\n+" + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lnum[7] * 0.1).ToString() + "% Conjuration damage" : ""));
 
 			if (n != -1)
 			{
@@ -348,21 +359,27 @@ namespace Crescent.UI
 			PerkCost[2] = 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]);
 			PerkCost[3] = 50 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
 			PerkCost[4] = 100;
-			PerkCost[5] = 100 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5]);
+			PerkCost[5] = 100;
+			PerkCost[6] = 25 + 25 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[6]);
+			PerkCost[7] = 250 * (1 + player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[7]);
 
 			PerkValue[0] = 25 + 25 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[0]);
 			PerkValue[1] = 100 * (int)Math.Pow(3, -1 + (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[1]));
 			PerkValue[2] = 25 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[2]);
 			PerkValue[3] = 50 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[3]);
 			PerkValue[4] = 100;
-			PerkValue[5] = 100 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5]);
+			PerkValue[5] = 100;
+			PerkValue[6] = 25 + 25 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[6]);
+			PerkValue[7] = 250 * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[7]);
 
 			PerkRelevantDescString[0] = "Each point into this perk\ngives +20% flight\nCosts " + PerkCost[0] + " points to upgrade";
 			PerkRelevantDescString[1] = "Each point into this perk\ngives +1 maximum minions\nCosts " + PerkCost[1] + " points to upgrade";
 			PerkRelevantDescString[2] = "Each point into this perk\nboosts your jump 1 block\nCosts " + PerkCost[2] + " points to upgrade";
 			PerkRelevantDescString[3] = "Each point into this perk\ngrants 1 mana per hit\nCosts " + PerkCost[3] + " points to upgrade";
-			PerkRelevantDescString[4] = "Survive a fatal blow with\n10% of your life\nCosts 100 points to obtain";
-			PerkRelevantDescString[5] = "Gain an extra healthbar\nthat scales with defence\nCosts 100 points to obtain";
+			PerkRelevantDescString[4] = "Survive a fatal blow with\n10% of your life\nCosts " + PerkCost[4] + " points to obtain";
+			PerkRelevantDescString[5] = "Gain an extra healthbar\nthat scales with defence\nCosts " + PerkCost[5] + " points to obtain";
+			PerkRelevantDescString[6] = "Reduce fall damage by 1/n\n\nCosts " + PerkCost[6] + " points to obtain";
+			PerkRelevantDescString[7] = "Each point into this perk\ngrants 1 life per melee hit\nCosts " + PerkCost[7] + " points to upgrade";
 		}
 
 		public void PerkButtonClicked(int value)

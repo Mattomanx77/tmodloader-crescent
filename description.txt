@@ -1,4 +1,3 @@
-THIS IS ACTUALLY 0.4.5.1, TMODLOADER WONT LET ME CHANGE VERSION NUMBERS LOWER!
 This is a UI/RPG mod.
 I made it in my spare time.
 tl;dr: Stats, skills, and perks!
@@ -32,6 +31,10 @@ v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4.6.1 - No I'm not back.
++Fixed a bug causing Bards to have insanely negative inspiration.
+If you already got hit by this, I'm sorry.
+
 v0.4.6 - Stats pane and more mod support!
 +Stats pane now updated to the new theme. One more to go!
 +Support for Enigma and Expanded Sentries!

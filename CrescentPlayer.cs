@@ -133,7 +133,7 @@ namespace Crescent
 		{
 			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicDamage += Lnum[3] / Use;
 			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicCrit = LuckFunction(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().symphonicCrit);
-			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[3] / Use));
+			//player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax = (int)(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().bardResourceMax * (Pos + Lnum[3] / Use));
 			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantBoost += Lnum[7] / Use;
 			player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantCrit = LuckFunction(player.GetModPlayer<ThoriumMod.ThoriumPlayer>().radiantCrit);
 		}
@@ -178,7 +178,14 @@ namespace Crescent
 			player.statMana += Perk[3];
 			player.statLife += Perk[7];
 
-			if (target.lifeMax > 5) Lexp += (int)(damage * (1 + Lnum[2] / Use));
+			if (target.lifeMax > 5){
+				if(target.type != NPCID.TargetDummy){
+					Lexp += (int)(damage * (1 + Lnum[2] / Use));
+				}
+				else{
+					Lexp += (int)(damage * (1 + Lnum[2] / 100*Use));
+				}
+			}
 			if (target.boss && target.life < 0) { GrantBossXP(target); }
 			CheckLifeforce(Lexp);
 		}

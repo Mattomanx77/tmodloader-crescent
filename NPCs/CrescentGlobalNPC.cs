@@ -14,12 +14,13 @@ namespace Crescent.NPCs
 		{
 			if (Config.MonsterLeveling)
 			{
-				int n = rng.Next(Main.hardMode ? NPC.downedPlantBoss ? 4 : 1 : 0, Main.hardMode ? NPC.downedPlantBoss ? Main.dayTime ? 50 : 125 : Main.dayTime ? 25 : 62 : Main.dayTime ? 10 : 25);
+				double n = Main.hardMode ? NPC.downedPlantBoss ? 5 : 2.5 : 1;
+				n = rng.Next((int)Math.Round(n), (int)Math.Round(n*12.5));
 				npc.GivenName = ("Lv. " + (1 + n) + " " + npc.TypeName);
 				npc.lifeMax = (int)(npc.lifeMax * (1 + (n * 0.005)));
 				npc.life = npc.lifeMax;
 				npc.defense = (int)(npc.defense * (1 + (n * 0.001)));
-				npc.damage = (int)(npc.damage * (1 + (n * 0.005)));
+				npc.damage = (int)(npc.damage * (1 + (n * 0.004)));
 			}
 		}
 

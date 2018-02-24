@@ -34,10 +34,10 @@ namespace Crescent.UI
 		private UIImage[] PerksButtonsIcons = new UIImage[Crescent.NUMPERKS];
 		private UIText[] PerksTitle = new UIText[Crescent.NUMPERKS];
 		private UIText[] PerksText = new UIText[Crescent.NUMPERKS];
-		private UIPanel PerkDsc = new UIPanel();
+		private UIPanel PerkDia = new UIPanel();
 		private UIText PerkIncButton = new UIText("+", 2);
-		private UIText PerkDscTitleText = new UIText("");
-		private UIText PerkDscText = new UIText("");
+		private UIText PerkDiaTitleText = new UIText("");
+		private UIText PerkDiaText = new UIText("");
 		private UIText MouseText = new UIText("");
 
 		public override void OnInitialize()
@@ -161,8 +161,8 @@ namespace Crescent.UI
 			PerkIncButton.OnClick += (a, b) => PerkIncButtonClicked(true);
 			PerkIncButton.OnRightClick += (a, b) => PerkIncButtonClicked(false);
 
-			PerkDsc.Width.Set(300f, 0f); PerkDsc.Height.Set(150f, 0f);
-			PerkDsc.Top.Set(23f, 0f);
+			PerkDia.Width.Set(300f, 0f); PerkDia.Height.Set(150f, 0f);
+			PerkDia.Top.Set(23f, 0f);
 			#endregion
 		}
 
@@ -192,9 +192,9 @@ namespace Crescent.UI
 
 		public void PerkDescClose()
 		{
-			if (PerksPaneInner.HasChild(PerkDsc))
+			if (PerksPaneInner.HasChild(PerkDia))
 			{
-				PerkDsc.Remove();
+				PerkDia.Remove();
 				PerkIncButton.Remove();
 			}
 			Crescent.mod.LifeForceUI.PerkSelected = -1;
@@ -204,7 +204,7 @@ namespace Crescent.UI
 		public void PerkIncButtonClicked(bool v)
 		{
 			Crescent.mod.LifeForceUI.PerkIncButtonClicked(v);
-			PerkDscText.SetText(Crescent.mod.LifeForceUI.PerkRelevantDescString[Crescent.mod.LifeForceUI.PerkSelected]);
+			PerkDiaText.SetText(Crescent.mod.LifeForceUI.PerkRelevantDescString[Crescent.mod.LifeForceUI.PerkSelected]);
 		}
 
 		public void PerkButtonClicked(int value)
@@ -212,20 +212,20 @@ namespace Crescent.UI
 			Player player = Main.player[Main.myPlayer];
 			Crescent.mod.LifeForceUI.PerkCostUpdate(player);
 			//Descriptions
-			PerkDsc.Remove();
+			PerkDia.Remove();
 			PerkIncButton.Remove();
-			PerksPaneInner.Append(PerkDsc);
+			PerksPaneInner.Append(PerkDia);
 			PerksPaneInner.Append(PerkIncButton);
-			PerkDsc.Left.Set(PerksButtons[value].Left.Pixels - PerkDsc.Width.Pixels / 2 + 12f, 0.5f);
-			PerkDsc.Top.Set(PerksButtons[value].Top.Pixels + 23f, 0.5f);
+			PerkDia.Left.Set(PerksButtons[value].Left.Pixels - PerkDia.Width.Pixels / 2 + 12f, 0.5f);
+			PerkDia.Top.Set(PerksButtons[value].Top.Pixels + 23f, 0.5f);
 			PerkIncButton.Left.Set(PerksButtons[value].Left.Pixels + 23f, 0.5f);
 			PerkIncButton.Top.Set(PerksButtons[value].Top.Pixels + 3f, 0.5f);
-			PerkDscTitleText.SetText(Crescent.mod.LifeForceUI.PerkRelevantString[value]);
-			PerkDscTitleText.Left.Set(-PerkDscTitleText.MinWidth.Pixels/2, 0.5f);
-			PerkDscText.Left.Set(25f, 0f); PerkDscText.Top.Set(25f, 0f);
-			PerkDscText.SetText(Crescent.mod.LifeForceUI.PerkRelevantDescString[value]);
-			PerkDsc.Append(PerkDscTitleText);
-			PerkDsc.Append(PerkDscText);
+			PerkDiaTitleText.SetText(Crescent.mod.LifeForceUI.PerkRelevantString[value]);
+			PerkDiaTitleText.Left.Set(-PerkDiaTitleText.MinWidth.Pixels/2, 0.5f);
+			PerkDiaText.Left.Set(25f, 0f); PerkDiaText.Top.Set(25f, 0f);
+			PerkDiaText.SetText(Crescent.mod.LifeForceUI.PerkRelevantDescString[value]);
+			PerkDia.Append(PerkDiaTitleText);
+			PerkDia.Append(PerkDiaText);
 			Crescent.mod.LifeForceUI.PerkSelected = value;
 			Main.PlaySound(SoundID.MenuTick);
 		}

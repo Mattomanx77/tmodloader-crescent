@@ -43,7 +43,7 @@ namespace Crescent.UI
 		private UIBox RestartConfirm = new UIBox();
 		private UIText[] RestartConfirmText = new UIText[2] { new UIText("Are you sure you want"), new UIText("to start all over?") };
 		private UIText[] RestartConfirmButton = new UIText[2] { new UIText("[Yes]"), new UIText("[No]") };
-		private UIImage PerkIncButton;
+		private UIImage PerkIncButton = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/PerkDialougPlus"));
 		private int[] PerkCost = new int[Crescent.NUMPERKS];
 		private int[] PerkValue = new int[Crescent.NUMPERKS];
 		public bool[] PerkOne = new bool[Crescent.NUMPERKS] { false, false, false, false, true, false, false, false };
@@ -51,23 +51,29 @@ namespace Crescent.UI
 		public string[] PerkRelevantDescString = new string[Crescent.NUMPERKS];
 		public string[] SkillRelevantString = new string[Crescent.NUMPERKS];
 		public string[] SkillRelevantDescString = new string[Crescent.NUMPERKS];
-		private Texture2D PerkIncButtonImage = ModLoader.GetTexture("Crescent/Assets/UI/ThemeClassic/PlusButton");
 		public int PerkSelected;
+		public int SelectedPerk = 0;
+		private Texture2D[] PerkImage = new Texture2D[Crescent.NUMPERKS];
 		private UIImage[] PerkButton = new UIImage[Crescent.NUMPERKS];
 		private UIImage[] SkillButton = new UIImage[Crescent.NUMPERKS];
 		private UIText[] PerkText = new UIText[Crescent.NUMPERKS];
 		private UIText[] SkillText = new UIText[Crescent.NUMPERKS];
-		private UIBox PerkDsc = new UIBox();
+		private UIImage PerkDia = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/PerkDialoug"));
+		private UIImage PerkDiaPre = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/PerkDialougPreview"));
+		private UIImage PerkPreview = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_WingMuscle"));
+		private UIText PerkPreviewTxt = new UIText("");
+		private UIImage PerkDiaClose = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/HideButton"));
 		private Color Gold = new Color(255, 191, 0);
 		private UIImage StatUI = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/StatsPane"));
 		private PerkUIBox PerkUI = new PerkUIBox();
+		private UIText PerkTray = new UIText("");
 		private bool SkillMenuVisible;
 		private UIText SttText = new UIText("");
 		private UIText[] StatText = new UIText[Crescent.NUMSTATS];
 		public UIText[] StatDesc = new UIText[Crescent.NUMSTATS];
 		private UIImage[] StatButton = new UIImage[Crescent.NUMSTATS];
-		private UIText PerkDscTitleText = new UIText("");
-		private UIText PerkDscText = new UIText("");
+		private UIText PerkDiaTitleText = new UIText("");
+		private UIText PerkDiaText = new UIText("");
 		private Vector2 offset; private bool dragging = false;
 		private UIText MouseText = new UIText("");
 
@@ -143,7 +149,7 @@ namespace Crescent.UI
 			LevelIndicator.Append(LevelIndicatorGlass2);
 			#endregion
 			#region StatUI
-			StatUI.Height.Set(Crescent.NUMSTATS *48 + 81f, 0f);
+			StatUI.Height.Set(398, 0f);
 			StatUI.Width.Set(104f, 0f);
 			StatUI.Left.Set(-363f, 0.5f);
 			StatUI.Top.Set(80f, 0f);
@@ -236,41 +242,49 @@ namespace Crescent.UI
 			hidePerkUIButton.Left.Set(PerkUI.Width.Pixels - 17f, 0f); hidePerkUIButton.Top.Set(0f, 0f);
 			hidePerkUIButton.OnClick += (a, b) => HideButtonClicked(1);
 			PerkUI.Append(hidePerkUIButton);
+			
+			PerkUI.Append(PerkDia);
 
-			PerkDsc.backgroundColor = new Color(255, 255, 255, 255);
-			PerkDsc.Width.Set(250f, 0f);PerkDsc.Height.Set(100f, 0f);
-			PerkDsc.Top.Set(23f, 0f);
-			PerkUI.Append(PerkDsc);
+			PerkDiaClose.Top.Set(18, 0f);
+			PerkDiaClose.Left.Set(-PerkDiaClose.Width.Pixels, 1f);
+			PerkDiaClose.OnClick += (a, b) => PerkDescClose();
+			PerkDia.Append(PerkDiaClose);
 
-			PerkIncButton = new UIImage(PerkIncButtonImage);
 			PerkIncButton.OnClick += (a, b) => PerkIncButtonClicked(true);
 			PerkIncButton.OnRightClick += (a, b) => PerkIncButtonClicked(false);
 			PerkUI.Append(PerkIncButton);
-			
-			//Buttons
-			PerkButton[0] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_WingMuscle"));
-			PerkButton[1] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Overlord"));
-			PerkButton[2] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Jumpman"));
-			PerkButton[3] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_ReaperofStars"));
-			PerkButton[4] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_SecondWind"));
-			PerkButton[5] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_Adamant"));
-			PerkButton[6] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_SoftLanding"));
-			PerkButton[7] = new UIImage(ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Perk_VampiricEdge"));
 
+			PerkTray.Width = PerkUI.Width;
+			PerkTray.Height = PerkUI.Height;
+			PerkUI.Append(PerkTray);
+
+			//Buttons
+			PerkImage[0] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_WingMuscle");
+			PerkImage[1] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_Overlord");
+			PerkImage[2] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_Jumpman");
+			PerkImage[3] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_ReaperofStars");
+			PerkImage[4] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_SecondWind");
+			PerkImage[5] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_Adamant");
+			PerkImage[6] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_SoftLanding");
+			PerkImage[7] = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Perks/Perk_VampiricEdge");
+			
+			int NumRows = (int)(Crescent.NUMPERKS/4f);
 			for (int i = 0; i < Crescent.NUMPERKS; i++)
 			{
 				int n = i;
-				PerkButton[i].Width.Set(23f, 0f); PerkButton[i].Height.Set(23f, 0f);
-				PerkButton[i].Left.Set((2*(i-(-0.5f+ Crescent.NUMPERKS /2F))*23)+257-12f, 0f);PerkButton[i].Top.Set(193-12f, 0f);
+				//Crescent.NUMPERKS
+				PerkButton[i] = new UIImage(PerkImage[i]);
+				PerkButton[i].Left.Set((int)((PerkUI.Width.Pixels/2f)-(PerkButton[i].Width.Pixels/2f)+((PerkButton[i].Width.Pixels*1.5f)*(0.5f+(i%4)-2))), 0f);
+				PerkButton[i].Top.Set((int)((PerkUI.Height.Pixels/2f)-(PerkButton[i].Height.Pixels/2f)+((PerkButton[i].Height.Pixels*1.5f)*(0.5f+(int)(i/4f)-(NumRows/2)))), 0f);
 				PerkButton[i].OnClick += (a, b) => PerkButtonClicked(n);
 				PerkButton[i].OnRightClick += (a, b) => PerkDescClose();
-				PerkUI.Append(PerkButton[i]);
+				PerkTray.Append(PerkButton[i]);
 				PerkText[i] = new UIText("");
 				PerkText[i].Left.Set(0f, 0.75f); PerkText[i].Top.Set(0f, 0.5f);
 				PerkButton[i].Append(PerkText[i]);
 			}
 
-			PerkDsc.Remove();
+			PerkDia.Remove();
 			PerkIncButton.Remove();
 			#endregion
 		}
@@ -346,10 +360,11 @@ namespace Crescent.UI
 				}
 			}
 
+			PerkPreviewTxt.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[PerkSelected].ToString());
 			Main.PlaySound(SoundID.MenuTick);
 			PerkCostUpdate(player);
 			//PerkDescClose();
-			PerkDscText.SetText(PerkRelevantDescString[PerkSelected]);
+			PerkDiaText.SetText(PerkRelevantDescString[PerkSelected]);
 		}
 
 		public void PerkCostUpdate(Player player)
@@ -387,31 +402,44 @@ namespace Crescent.UI
 			Player player = Main.player[Main.myPlayer];
 			PerkCostUpdate(player);
 			//Descriptions
-			PerkDsc.Remove();
+			PerkTray.Remove();
+			PerkDia.Remove();
 			PerkIncButton.Remove();
-			PerkUI.Append(PerkDsc);
-			PerkUI.Append(PerkIncButton);
-			PerkDsc.Left.Set(PerkButton[value].Left.Pixels - PerkDsc.Width.Pixels / 2 + 12f, 0f);
-			PerkDsc.Top.Set(PerkButton[value].Top.Pixels + 23f, 0f);
-			PerkIncButton.Left.Set(PerkButton[value].Left.Pixels + 23f, 0f);
-			PerkIncButton.Top.Set(PerkButton[value].Top.Pixels + 3f, 0f);
-			PerkDscTitleText.Left.Set(73.5f, 0f);
-			PerkDscText.Left.Set(25f, 0f); PerkDscText.Top.Set(25f, 0f);
-			PerkDscTitleText.SetText(PerkRelevantString[value]);
-			PerkDscText.SetText(PerkRelevantDescString[value]);
-			PerkDsc.Append(PerkDscTitleText);
-			PerkDsc.Append(PerkDscText);
+			PerkUI.Append(PerkDia);
+			PerkDia.Left.Set((int)(PerkUI.Width.Pixels / 2 - PerkDia.Width.Pixels / 2), 0f);
+			PerkDia.Top.Set((int)(PerkUI.Height.Pixels / 2 - PerkDia.Height.Pixels / 3), 0f);
+			PerkDia.Append(PerkPreview);
+			PerkPreview.Left.Set(6, 0);
+			PerkPreview.Top.Set(-14, 0);
+			PerkPreview.SetImage(PerkImage[value]);
+			PerkDia.Append(PerkDiaPre);
+			PerkDiaPre.Left.Set(8, 0);
+			PerkDiaPre.Top.Set(-14, 0);
+			PerkDiaPre.Append(PerkPreviewTxt);
+			PerkPreviewTxt.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[value].ToString());
+			PerkPreviewTxt.Left.Set(89-(PerkPreviewTxt.MinWidth.Pixels/2f), 0);
+			PerkPreviewTxt.Top.Set(33-(PerkPreviewTxt.MinHeight.Pixels/2f), 0);
+			PerkDiaPre.Append(PerkIncButton);
+			PerkIncButton.Left.Set(114, 0f);
+			PerkIncButton.Top.Set(22, 0f);
+			PerkDiaTitleText.Left.Set(88f, 0f); PerkDiaTitleText.Top.Set(44f, 0f);
+			PerkDiaText.Left.Set(9f, 0f); PerkDiaText.Top.Set(70f, 0f);
+			PerkDiaTitleText.SetText(PerkRelevantString[value]);
+			PerkDiaText.SetText(PerkRelevantDescString[value]);
+			PerkDia.Append(PerkDiaTitleText);
+			PerkDia.Append(PerkDiaText);
 			PerkSelected = value;
 			Main.PlaySound(SoundID.MenuTick);
 		}
 
 		public void PerkDescClose()
 		{
-			if (PerkUI.HasChild(PerkDsc))
+			if (PerkUI.HasChild(PerkDia))
 			{
-				PerkDsc.Remove();
+				PerkDia.Remove();
 				PerkIncButton.Remove();
 			}
+			PerkUI.Append(PerkTray);
 			PerkSelected = -1;
 			Main.PlaySound(SoundID.MenuTick);
 		}
@@ -508,6 +536,7 @@ namespace Crescent.UI
 			int _Life = player.statLife, _LifeMax = player.statLifeMax2, _ALife = 0, _ALifeMax = (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Perk[5] * player.statDefense);
 			_LifeMax -= _ALifeMax; _Life = _Life > _LifeMax ? _LifeMax : _Life;
 			_ALife = player.statLife > _LifeMax ? player.statLife - _LifeMax : 0;
+			int ScrW = Main.screenWidth;
 
 			//Topright
 			Level.SetText(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llvl.ToString());
@@ -515,39 +544,38 @@ namespace Crescent.UI
 			Level.TextColor = player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lstt > 0 ? Gold : Color.White;
 
 			//Resource bars
-			Life.Left.Set(-84-46-player.statLifeMax * (Main.screenWidth >= 1626 ? 3 : Main.screenWidth >= 1376 ? 2.5f : Main.screenWidth >= 1126 ? 2 : 1.5f) * (Config.HalfsizeHealthbar ? 0.5f : 1), 1f);
-			LifeFill.Left.Set(46+(player.statLifeMax - (_Life / (float)_LifeMax) * player.statLifeMax) * 3, 0f);
+			Life.Left.Set((ScrW-84f) - ((ScrW-584f) * ((player.statLifeMax * (Config.HalfsizeHealthbar ? 0.5f : 1)) /500f)), 0);
+			if (Life.Left.Pixels > (ScrW - 284f)) Life.Left.Set(ScrW - 284f, 0);
+			LifeFill.Left.Set(46 + ((1 - (_Life/(float)_LifeMax)) * (ScrW - 84f - Life.Left.Pixels - 46)), 0);
 			LifeText.SetText(_Life.ToString() + "/" + _LifeMax.ToString());
-			LifeText.Left.Set(-LifeText.MinWidth.Pixels / 2f, player.statLifeMax / (1000f * (Config.HalfsizeHealthbar ? 2 : 1)));
-			if (_ALifeMax > 0)
-			{
+			LifeText.Left.Set(46 + (0.5f) * (ScrW - 84f - Life.Left.Pixels - 46), 0);
+			/*Life.Left.Set(-84-46-player.statLifeMax * (Main.screenWidth >= 1626 ? 3 : Main.screenWidth >= 1376 ? 2.5f : Main.screenWidth >= 1126 ? 2 : 1.5f) * (Config.HalfsizeHealthbar ? 0.5f : 1), 1f);
+			LifeFill.Left.Set(46+(player.statLifeMax - (_Life / (float)_LifeMax) * player.statLifeMax) * 3, 0f);*/
+			if (_ALifeMax > 0){
 				LifeText.Top.Set(-10f -LifeText.MinHeight.Pixels/2, 0.5f);
-				ALifeFill.Left.Set(46 + (player.statLifeMax - (_ALife / (float)_ALifeMax) * player.statLifeMax) * 3, 0f);
+				ALifeFill.Left.Set(46 + ((1 - (_ALife / (float)_ALifeMax)) * (ScrW - 84f - Life.Left.Pixels - 46)), 0f);
 				ALifeText.SetText(_ALife.ToString() + "/" + _ALifeMax.ToString());
-				ALifeText.Left.Set(-ALifeText.MinWidth.Pixels / 2f, player.statLifeMax / (1000f * (Config.HalfsizeHealthbar ? 2 : 1)));
+				ALifeText.Left.Set(46 + (0.5f) * (ScrW - 84f - Life.Left.Pixels - 46), 0);
 			}
-			else
-			{
+			else{
 				LifeText.Top.Set(-10f, 0.5f);
 				ALifeFill.Left.Set(0f, 1f);
 				ALifeText.SetText("");
 			}
 
-			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).secondWindTimer > 0)
-			{
+			if (player.GetModPlayer<CrescentPlayer>(Crescent.mod).secondWindTimer > 0){
 				LifeGlassBroken.ImageScale = 1f;
 				LifeGlass2.ImageScale = 0f;
 			}
-			else
-			{
+			else{
 				LifeGlassBroken.ImageScale = 0f;
 				LifeGlass2.ImageScale = 1f;
 			}
 
-			Exp.Left.Set(Life.Left.Pixels + 150f < -1080 ? -1080 : Life.Left.Pixels + 150f, 1f);
-			ExpFill.Left.Set(-(Exp.Width.Pixels + 46 + Exp.Left.Pixels) + (Exp.Left.Pixels + 34 + 46) * (player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp / (float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp), 1f);
+			Exp.Left.Set(Life.Left.Pixels + 108, 0f);
+			ExpFill.Left.Set(34 + ((1 - ((player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp / (float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp))) * (ScrW - 66f - Exp.Left.Pixels - 34)), 0f);
 			ExpText.SetText((Math.Floor(10000*(player.GetModPlayer<CrescentPlayer>(Crescent.mod).Lexp/(float)player.GetModPlayer<CrescentPlayer>(Crescent.mod).Llxp))/100).ToString() + "%");
-			ExpText.Left.Set(-ExpText.MinWidth.Pixels / 2f, player.statLifeMax / (1000f * (Config.HalfsizeHealthbar ? 2 : 1)));
+			ExpText.Left.Set(62 + (0.5f) * (ScrW - 84f - Exp.Left.Pixels - 62) - ExpText.MinWidth.Pixels/2, 0);
 
 			Mana.Top.Set(50-800+player.statManaMax * (Main.screenHeight >= 888 ? 4 : (Main.screenHeight >= 688 ? 3 : 2)), 0f);		
 			ManaFill.Top.Set((-player.statManaMax+(player.statMana / (float)player.statManaMax2)*player.statManaMax)*4, 0f);
@@ -813,15 +841,9 @@ namespace Crescent.UI
 		class UIBox : UIElement
 		{
 			public Color backgroundColor = Color.Gray;
-			private static Texture2D BG;
-			private static Texture2D Dark;
 
 			public UIBox()
 			{
-				if (BG == null)
-					BG = ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/PerkExt_BG");
-				if (Dark == null)
-					Dark = ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/PerkExt_Dark");
 			}
 
 			protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -832,11 +854,11 @@ namespace Crescent.UI
 				int width = (int)Math.Ceiling(dimensions.Width);
 
 				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X, point1.Y, width, height), Color.Black);
-				spriteBatch.Draw(BG, new Rectangle(point1.X + 2, point1.Y + 2, width - 4, height - 4), backgroundColor);
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 2, point1.Y + 2, width - 4, height - 4), backgroundColor);
 				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 2, point1.Y + 1, width - 4, 2), Color.White);
 				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 1, point1.Y + 2, 2, height - 4), Color.White);
-				spriteBatch.Draw(Dark, new Rectangle(point1.X + 2, point1.Y + height - 3, width - 4, 2), backgroundColor);
-				spriteBatch.Draw(Dark, new Rectangle(point1.X + width - 3, point1.Y + 2, 2, height - 4), backgroundColor);
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + 2, point1.Y + height - 3, width - 4, 2), backgroundColor);
+				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X + width - 3, point1.Y + 2, 2, height - 4), backgroundColor);
 			}
 		}
 
@@ -892,9 +914,9 @@ namespace Crescent.UI
 			public PerkUIBox()
 			{
 				if (Twinkle == null)
-					Twinkle = ModLoader.GetTexture("Crescent/Assets/UI/PerkAssets/Twinkle");
+					Twinkle = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/Twinkle");
 				if (Tex == null)
-					Tex = ModLoader.GetTexture("Crescent/Assets/UI/ThemeClassic/PerkBox");
+					Tex = ModLoader.GetTexture("Crescent/Assets/UI/ThemeCrescent/PerkBox");
 			}
 
 			protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -906,9 +928,9 @@ namespace Crescent.UI
 
 				spriteBatch.Draw(Main.magicPixel, new Rectangle(point1.X, point1.Y, width, height), new Color(0, 0, 0));
 				spriteBatch.Draw(Twinkle, new Rectangle(
-					(int)(point1.X + 13 + Math.Sin((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 244 + 244),
-					(int)(point1.Y + 13 + Math.Cos((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 180 + 180),
-					12, 12), backgroundColor);
+					(int)(point1.X + 16-12 + Math.Sin((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 241 + 241),
+					(int)(point1.Y + 16-12 + Math.Cos((System.DateTime.Now.Ticks / Math.PI) / 10000000F) * 177 + 177),
+					24, 24), backgroundColor);
 				spriteBatch.Draw(Tex, new Rectangle(point1.X, point1.Y, width, height), backgroundColor);
 			}
 		}

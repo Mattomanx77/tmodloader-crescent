@@ -22,8 +22,7 @@ Thanks to gateboy6 for pointing out bugs and things that I missed repeatedly!
 
 -IN THE FUTURE (HOPEFULLY)-
 More perks/skills
-Improve the UI to fit more into Terraria's theme. (Currently it's just a placeholder)
-New UI textures in the works!
+New themes?
 Something to make this mod balanced (Open to suggestions)
 Artifact Sacrifice (Collect a large amount of an accessory to unlock a related perk?)
 v0.5 - Skills!+Bind a key to activate skills!
@@ -31,8 +30,13 @@ v0.5 - Skills!+Bind a key to activate skills!
 
 
 -CHANGELOG-
+v0.4.7 - Perks pane. Last minor 0.4 update!
++ Redone the perks pane. Prepared and ready for the features to be brought in by v0.5
++ Fixed a bug causing dummies to grant astronomical amounts of XP.
+= Changed how a boss XP bonus is given. The bonus granted is severely reduced every 100 levels.
+
 v0.4.6.1 - No I'm not back.
-+Fixed a bug causing Bards to have insanely negative inspiration.
++Fixed a bug causing Bards to have insanely negative inspiration. Irony!
 If you already got hit by this, I'm sorry.
 
 v0.4.6 - Stats pane and more mod support!
